@@ -149,15 +149,15 @@ public class MainActivity extends ListActivity {
             return;
         }
 
-        final Firebase echoRef = mFirebaseRef.child(key).child("echo");
-        echoRef.addListenerForSingleValueEvent(
+        final Firebase upvoteRef = mFirebaseRef.child(key).child("upvote");
+        upvoteRef.addListenerForSingleValueEvent(
                 new ValueEventListener() {
                     @Override
                     public void onDataChange(DataSnapshot dataSnapshot) {
-                        Long echoValue = (Long) dataSnapshot.getValue();
-                        Log.e("Echo update:", "" + echoValue);
+                        Long upvoteValue = (Long) dataSnapshot.getValue();
+                        Log.e("Upvote update:", "" + upvoteValue);
 
-                        echoRef.setValue(echoValue + 1);
+                        upvoteRef.setValue(upvoteValue + 1);
                     }
 
                     @Override

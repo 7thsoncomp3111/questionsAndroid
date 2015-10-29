@@ -51,7 +51,7 @@ public class QuestionListAdapter extends FirebaseListAdapter<Question> {
         DBUtil dbUtil = activity.getDbutil();
 
         // Map a Chat object to an entry in our listview
-        int echo = question.getEcho();
+        int echo = question.getUpvote();
         Button echoButton = (Button) view.findViewById(R.id.echo);
         echoButton.setText("" + echo);
         echoButton.setTextColor(Color.BLUE);

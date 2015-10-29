@@ -1,17 +1,23 @@
 package hk.ust.cse.hunkim.questionroom.question;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+
+
 import java.util.Date;
 
 /**
  * Created by hunkim on 7/16/15.
  */
+@JsonIgnoreProperties(ignoreUnknown=true)
 public class Question implements Comparable<Question> {
 
     /**
      * Must be synced with firebase JSON structure
      * Each must have getters
      */
-    private String key;
+
+    public String key;
     private String wholeMsg;
     private String head;
     private String headLastChar;
@@ -19,8 +25,8 @@ public class Question implements Comparable<Question> {
     private String linkedDesc;
     private boolean completed;
     private long timestamp;
-    private String tags;
-    private int echo;
+    //private String tags;
+    private int upvote;
     private int order;
     private boolean newQuestion;
 
@@ -47,7 +53,7 @@ public class Question implements Comparable<Question> {
      */
     public Question(String message) {
         this.wholeMsg = message;
-        this.echo = 0;
+        this.upvote = 0;
         this.head = getFirstSentence(message).trim();
         this.desc = "";
         if (this.head.length() < message.length()) {
@@ -99,8 +105,8 @@ public class Question implements Comparable<Question> {
         return desc;
     }
 
-    public int getEcho() {
-        return echo;
+    public int getUpvote() {
+        return upvote;
     }
 
     public String getWholeMsg() {
@@ -123,9 +129,9 @@ public class Question implements Comparable<Question> {
         return timestamp;
     }
 
-    public String getTags() {
+    /*public String getTags() {
         return tags;
-    }
+    }*/
 
     public int getOrder() {
         return order;
@@ -138,6 +144,7 @@ public class Question implements Comparable<Question> {
     public void updateNewQuestion() {
         newQuestion = this.timestamp > new Date().getTime() - 180000;
     }
+    @JsonIgnore
 
     public String getKey() {
         return key;
@@ -148,7 +155,7 @@ public class Question implements Comparable<Question> {
     }
 
     /**
-     * New one/high echo goes bottom
+     * New one/high upvote goes bottom
      * @param other other chat
      * @return order
      */
@@ -163,13 +170,13 @@ public class Question implements Comparable<Question> {
         }
 
 
-        if (this.echo == other.echo) {
+        if (this.upvote == other.upvote) {
             if (other.timestamp == this.timestamp) {
                 return 0;
             }
             return other.timestamp > this.timestamp ? -1 : 1;
         }
-        return this.echo - other.echo;
+        return this.upvote - other.upvote;
     }
 
 
