@@ -77,7 +77,7 @@ public class QuestionListAdapter extends FirebaseListAdapter<Question> {
             msgString += "<font color=red>NEW </font>";
         }
 
-        msgString += "<B>" + question.getHead() + "</B>" + question.getDesc();
+        msgString += "<B>" + Html.escapeHtml(question.getHead()) + "</B>" + Html.escapeHtml(question.getDesc());
 
         ((TextView) view.findViewById(R.id.head_desc)).setText(Html.fromHtml(msgString));
         view.setOnClickListener(new View.OnClickListener() {
