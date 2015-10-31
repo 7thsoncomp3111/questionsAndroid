@@ -76,7 +76,7 @@ public class QuestionListAdapter extends FirebaseListAdapter<Question> {
         if (question.isNewQuestion()) {
             msgString += "<font color=red>NEW </font>";
         }
-        //  escapeHTML for XSS protection
+
         msgString += "<B>" + Html.escapeHtml(question.getHead()) + "</B>" + Html.escapeHtml(question.getDesc());
 
         ((TextView) view.findViewById(R.id.head_desc)).setText(Html.fromHtml(msgString));
