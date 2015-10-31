@@ -32,7 +32,7 @@ public class QuestionTest  extends TestCase {
         };
 
         for (int i=0; i<strHead.length; i+=2) {
-            String head = q.getFirstSentence(strHead[i]);
+            String head = Question.getFirstSentence(strHead[i]);
             assertEquals("Chat.getFirstSentence", strHead[i+1], head);
         }
     }

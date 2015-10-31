@@ -34,7 +34,7 @@ public abstract class FirebaseListAdapter<T> extends BaseAdapter {
     private Class<T> mModelClass;
     private int mLayout;
     private LayoutInflater mInflater;
-    private List<T> mModels;
+    public List<T> mModels;
     private Map<String, T> mModelKeys;
     private ChildEventListener mListener;
 

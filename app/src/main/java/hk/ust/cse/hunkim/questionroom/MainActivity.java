@@ -1,5 +1,6 @@
 package hk.ust.cse.hunkim.questionroom;
 
+import android.app.Activity;
 import android.app.ListActivity;
 import android.content.Intent;
 import android.database.DataSetObserver;
@@ -22,7 +23,7 @@ import hk.ust.cse.hunkim.questionroom.db.DBHelper;
 import hk.ust.cse.hunkim.questionroom.db.DBUtil;
 import hk.ust.cse.hunkim.questionroom.question.Question;
 
-public class MainActivity extends ListActivity {
+public class MainActivity extends Activity {
 
     // TODO: change this to your own Firebase URL
     private static final String FIREBASE_URL = "https://resplendent-inferno-9346.firebaseio.com/";
@@ -90,7 +91,7 @@ public class MainActivity extends ListActivity {
         super.onStart();
 
         // Setup our view and list adapter. Ensure it scrolls to the bottom as data changes
-        final ListView listView = getListView();
+        final ListView listView = (ListView)findViewById(android.R.id.list);
         // Tell our list adapter that we only want 200 messages at a time
         mChatListAdapter = new QuestionListAdapter(
                 mFirebaseRef.orderByChild("echo").limitToFirst(200),
