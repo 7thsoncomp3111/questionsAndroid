@@ -7,7 +7,17 @@ import android.text.TextUtils;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.inputmethod.EditorInfo;
+import android.widget.ListView;
 import android.widget.TextView;
+
+import com.firebase.client.DataSnapshot;
+import com.firebase.client.Firebase;
+import com.firebase.client.FirebaseError;
+import com.firebase.client.ValueEventListener;
+
+import java.util.ArrayList;
+
+import hk.ust.cse.hunkim.questionroom.question.ButtonViewAdapter;
 
 
 /**
@@ -20,6 +30,20 @@ public class JoinActivity extends Activity {
      */
     // UI references.
     private TextView roomNameView;
+
+
+    // Edit Rey Add main page suggestion rooms
+
+    private static final String FIREBASE_URL = "https://resplendent-inferno-9346.firebaseio.com/";
+
+    private Firebase mFirebaseRef;
+
+    private ArrayList<String> rooms = new ArrayList<String>();
+
+    private ListView List2view;
+    private ButtonViewAdapter btn2;
+
+    // End of Edit
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -39,8 +63,46 @@ public class JoinActivity extends Activity {
                 return true;
             }
         });
+        //Added to retrive firebase data
+
+
+        rooms.clear();
+        List2view = (ListView) findViewById(R.id.List2View);
+        btn2 = new ButtonViewAdapter(this, rooms, roomNameView);
+        List2view.setAdapter(btn2);
+
     }
 
+    public void onStart(){
+        super.onStart();
+
+        rooms.clear();
+        btn2.notifyDataSetChanged();
+
+        Firebase.setAndroidContext(this);
+        mFirebaseRef = new Firebase(FIREBASE_URL).child("room");
+
+
+
+        mFirebaseRef.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot snapshot) {
+
+                for (DataSnapshot postSnapshot : snapshot.getChildren()) {
+                    rooms.add(postSnapshot.getKey());
+                }
+            }
+
+            @Override
+            public void onCancelled(FirebaseError firebaseError) {
+
+            }
+        });
+
+        btn2.notifyDataSetChanged();
+
+
+    }
 
     /**
      * Attempts to sign in or register the account specified by the login form.
