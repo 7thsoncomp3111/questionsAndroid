@@ -8,7 +8,13 @@
     android:paddingLeft="@dimen/activity_horizontal_margin"
     android:paddingRight="@dimen/activity_horizontal_margin"
     android:paddingTop="@dimen/activity_vertical_margin"
+    android:background="#FFFFFF"
     tools:context="hk.ust.cse.hunkim.questionroom.JoinActivity">
+
+    <ImageView
+        android:layout_width="55dp"
+        android:layout_height="75dp"
+        android:src="@drawable/firebase_logo" />
 
     <TextView
         android:layout_width="wrap_content"
@@ -18,32 +24,58 @@
         android:id="@+id/textView"
         android:textAlignment="center" />
 
-    <AutoCompleteTextView
-        android:id="@+id/room_name"
+    <LinearLayout
+        android:orientation="horizontal"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:hint="@string/prompt_room_name"
-        android:inputType="textShortMessage"
-        android:maxLines="1"
-        android:singleLine="true"
-        android:paddingTop="30dp"/>
+        android:background="#FFFFFF"
+        android:layout_marginTop="10dp">
 
-    <Button
-        android:id="@+id/join_button"
-        style="?android:textAppearanceSmall"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="16dp"
-        android:onClick="attemptJoin"
-        android:text="@string/action_join"
-        android:textStyle="bold"
-        android:background="#fdfdfd" />
+        <AutoCompleteTextView
+            android:id="@+id/room_name"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:hint="@string/prompt_room_name"
+            android:inputType="textShortMessage"
+            android:maxLines="1"
+            android:singleLine="true"
+            android:layout_weight="0.8" />
 
-    <ListView
+        <ImageButton
+            android:id="@+id/join_button"
+            style="?android:attr/borderlessButtonStyle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:onClick="attemptJoin"
+            android:layout_below="@+id/list"
+            android:src="@android:drawable/ic_menu_send"
+            android:background="@drawable/button_join_selector"
+            android:layout_gravity="right"
+            android:layout_marginLeft="10dp" />
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:orientation="horizontal"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:id="@+id/List2View"
-        android:layout_gravity="center_horizontal" />
+        android:background="#FFFFFF"
+        android:layout_marginTop="20dp">
+
+        <GridView
+
+            android:id="@+id/List2View"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:columnWidth="150dp"
+            android:numColumns="auto_fit"
+            android:verticalSpacing="10dp"
+            android:horizontalSpacing="25dp"
+            android:stretchMode="columnWidth"
+            android:gravity="center"
+            android:layout_marginTop="10dp" />
+
+    </LinearLayout>
 
 </LinearLayout>
 

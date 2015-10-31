@@ -5,16 +5,40 @@
 
     tools:context=".MainActivity">
 
-
-    <Button
+    <LinearLayout
         android:id="@+id/close"
+        android:orientation="horizontal"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:onClick="Close"
-        android:text = "Quit Room"
         android:layout_alignParentTop="true"
-        android:layout_alignParentRight="true"
-        />
+        android:layout_alignParentStart="true"
+        android:layout_alignParentEnd="true"
+        android:background="#FFC700"
+        android:weightSum="1">
+
+        <ImageButton
+            android:id="@+id/closeButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:onClick="Close"
+            android:src="@android:drawable/stat_notify_more"
+            android:background="@drawable/button_selector"
+            android:layout_gravity="top|left"
+            android:layout_weight="0.05"
+            style="?android:attr/borderlessButtonStyle"/>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:textAppearance="?android:attr/textAppearanceLarge"
+            android:text="Room Name"
+            android:id="@+id/roomname_View"
+            android:layout_weight="0.4"
+            android:textColor="#fff"
+            android:autoText="false"
+            android:gravity="center" />
+
+    </LinearLayout>
 
     <ListView
         android:id="@android:id/list"
@@ -23,7 +47,6 @@
         android:layout_below="@+id/close"
         android:layout_above="@+id/listFooter"
         android:transcriptMode="alwaysScroll" />
-
 
     <LinearLayout
         android:id="@+id/listFooter"
@@ -47,6 +70,5 @@
             android:layout_height="wrap_content"
             android:src="@android:drawable/ic_menu_send" />
     </LinearLayout>
-
 
 </RelativeLayout>

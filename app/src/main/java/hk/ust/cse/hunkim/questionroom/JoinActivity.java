@@ -7,6 +7,7 @@ import android.text.TextUtils;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.inputmethod.EditorInfo;
+import android.widget.GridView;
 import android.widget.ListView;
 import android.widget.TextView;
 
@@ -40,7 +41,7 @@ public class JoinActivity extends Activity {
 
     private ArrayList<String> rooms = new ArrayList<String>();
 
-    private ListView List2view;
+    private GridView List2view;
     private ButtonViewAdapter btn2;
 
     // End of Edit
@@ -67,7 +68,7 @@ public class JoinActivity extends Activity {
 
 
         rooms.clear();
-        List2view = (ListView) findViewById(R.id.List2View);
+        List2view = (GridView) findViewById(R.id.List2View);
         btn2 = new ButtonViewAdapter(this, rooms, roomNameView);
         List2view.setAdapter(btn2);
 

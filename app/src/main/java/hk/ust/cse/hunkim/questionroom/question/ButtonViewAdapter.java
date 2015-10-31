@@ -6,6 +6,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.Button;
+import android.widget.GridView;
 import android.widget.TextView;
 
 import java.util.ArrayList;
@@ -21,6 +22,7 @@ public class ButtonViewAdapter extends BaseAdapter{
     private Context mContext;
     private TextView roomNameView;
     LayoutInflater mLayoutInflater;
+    private int marker = 0;
 
 
     // Gets the context so it can be used later
@@ -61,15 +63,38 @@ public class ButtonViewAdapter extends BaseAdapter{
                 false);
         //btn = new Button(mContext);
 
+        if(marker == 0) {
+            btn = (Button) rootView.findViewById(R.id.suggestionRoom);
+        } else {
+            btn = (Button) rootView.findViewById(R.id.suggestionRoom2);
 
-        btn = (Button) rootView.findViewById(R.id.suggestionRoom);
+        }
 
 
 
-        String p = rooms.get(position);
-        btn.setText(p);
+        final String p = rooms.get(position);
+        if(p.length() > 10){
+            String q = p.substring(0,10) + "...";
+            btn.setText(q);
+        } else {
+            btn.setText(p);
+        }
+
         btn.setFocusable(false);
         btn.setFocusableInTouchMode(false);
+
+        if(marker == 0) {
+            btn.setLayoutParams(new GridView.LayoutParams(500, 200));
+            btn.setPadding(10, 10, 10, 10);
+            marker = 1;
+        } else {
+            btn.setLayoutParams(new GridView.LayoutParams(500, 200));
+            btn.setPadding(10, 10, 10, 10);
+            marker = 0;
+        }
+
+
+
 
 
         btn.setOnClickListener(new View.OnClickListener() {
@@ -77,7 +102,7 @@ public class ButtonViewAdapter extends BaseAdapter{
                 // Perform action on click
                 JoinActivity m = (JoinActivity) v.getContext();
 
-                roomNameView.setText(btn.getText());
+                roomNameView.setText(p);
                 m.attemptJoin(roomNameView);
             }
         });
