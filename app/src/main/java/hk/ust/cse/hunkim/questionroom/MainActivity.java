@@ -25,7 +25,7 @@ import hk.ust.cse.hunkim.questionroom.question.Question;
 public class MainActivity extends ListActivity {
 
     // TODO: change this to your own Firebase URL
-    private static final String FIREBASE_URL = "https://resplendent-inferno-9346.firebaseio.com/room/";
+    private static final String FIREBASE_URL = "https://resplendent-inferno-9346.firebaseio.com/";
 
     private String roomName;
     private Firebase mFirebaseRef;
@@ -59,7 +59,7 @@ public class MainActivity extends ListActivity {
         setTitle("Room name: " + roomName);
 
         // Setup our Firebase mFirebaseRef
-        mFirebaseRef = new Firebase(FIREBASE_URL).child(roomName).child("questions");
+        mFirebaseRef = new Firebase(FIREBASE_URL).child("room").child(roomName).child("questions");
 
         // Setup our input methods. Enter key on the keyboard or pushing the send button
         EditText inputText = (EditText) findViewById(R.id.messageInput);
