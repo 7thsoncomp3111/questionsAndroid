@@ -56,7 +56,6 @@ public class QuestionListAdapter extends FirebaseListAdapter<Question> {
         echoButton.setText("" + echo);
         echoButton.setTextColor(Color.BLUE);
 
-
         echoButton.setTag(question.getKey()); // Set tag for button
 
         echoButton.setOnClickListener(
@@ -65,6 +64,24 @@ public class QuestionListAdapter extends FirebaseListAdapter<Question> {
                     public void onClick(View view) {
                         MainActivity m = (MainActivity) view.getContext();
                         m.updateEcho((String) view.getTag());
+                    }
+                }
+
+        );
+
+        int downvote = question.getDownvote();
+        Button downvoteButton = (Button) view.findViewById(R.id.minecho);
+        downvoteButton.setText("" + downvote);
+        downvoteButton.setTextColor(Color.BLUE);
+
+        downvoteButton.setTag(question.getKey());
+
+        downvoteButton.setOnClickListener(
+                new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        MainActivity m = (MainActivity) view.getContext();
+                        m.updateDownvote((String) view.getTag());
                     }
                 }
 
@@ -95,6 +112,8 @@ public class QuestionListAdapter extends FirebaseListAdapter<Question> {
 
         echoButton.setClickable(clickable);
         echoButton.setEnabled(clickable);
+        downvoteButton.setClickable(clickable);
+        downvoteButton.setEnabled(clickable);
         view.setClickable(clickable);
 
 
@@ -102,8 +121,10 @@ public class QuestionListAdapter extends FirebaseListAdapter<Question> {
         // grey out our button
         if (clickable) {
             echoButton.getBackground().setColorFilter(null);
+            downvoteButton.getBackground().setColorFilter(null);
         } else {
             echoButton.getBackground().setColorFilter(Color.RED, PorterDuff.Mode.MULTIPLY);
+            downvoteButton.getBackground().setColorFilter(Color.RED, PorterDuff.Mode.MULTIPLY);
         }
 
 

@@ -189,6 +189,52 @@ public class MainActivity extends ListActivity {
         dbutil.put(key);
     }
 
+    public void updateDownvote(String key) {
+        if (dbutil.contains(key)) {
+            Log.e("Dupkey", "Key is already in the DB!");
+            return;
+        }
+
+        final Firebase downvoteRef = mFirebaseRef.child(key).child("downvote");
+        downvoteRef.addListenerForSingleValueEvent(
+                new ValueEventListener() {
+                    @Override
+                    public void onDataChange(DataSnapshot dataSnapshot) {
+                        Long downvoteValue = (Long) dataSnapshot.getValue();
+                        Log.e("Downvote update:", "" + downvoteValue);
+
+                        downvoteRef.setValue(downvoteValue + 1);
+                    }
+
+                    @Override
+                    public void onCancelled(FirebaseError firebaseError) {
+
+                    }
+                }
+        );
+
+        final Firebase orderRef = mFirebaseRef.child(key).child("order");
+        orderRef.addListenerForSingleValueEvent(
+                new ValueEventListener() {
+                    @Override
+                    public void onDataChange(DataSnapshot dataSnapshot) {
+                        Long orderValue = (Long) dataSnapshot.getValue();
+                        Log.e("Order update:", "" + orderValue);
+
+                        orderRef.setValue(orderValue + 1);
+                    }
+
+                    @Override
+                    public void onCancelled(FirebaseError firebaseError) {
+
+                    }
+                }
+        );
+
+        // Update SQLite DB
+        dbutil.put(key);
+    }
+
     public void Close(View view) {
         finish();
     }
