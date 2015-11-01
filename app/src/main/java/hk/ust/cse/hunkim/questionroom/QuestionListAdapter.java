@@ -10,6 +10,7 @@ import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.TextView;
+import android.text.format.DateUtils;
 
 import com.firebase.client.Query;
 
@@ -143,6 +144,11 @@ public class QuestionListAdapter extends FirebaseListAdapter<Question> {
             echoButton.getBackground().setColorFilter(Color.RED, PorterDuff.Mode.MULTIPLY);
             downvoteButton.getBackground().setColorFilter(Color.RED, PorterDuff.Mode.MULTIPLY);
         }
+        long now = System.currentTimeMillis();
+        CharSequence relativeTime = DateUtils.getRelativeTimeSpanString(question.getTimestamp(), now, DateUtils.MINUTE_IN_MILLIS);
+
+        ((TextView) view.findViewById(R.id.timestamp)).setText(relativeTime);
+
 
 
         view.setTag(question.getKey());  // store key in the view

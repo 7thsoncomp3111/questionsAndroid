@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.test.ActivityUnitTestCase;
 import android.test.suitebuilder.annotation.MediumTest;
 import android.text.Html;
+import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.ListView;
 import android.widget.TextView;
@@ -16,6 +17,7 @@ public class MainActivityTest extends ActivityUnitTestCase<MainActivity> {
 
     private Intent mStartIntent;
     private ImageButton mButton;
+    private Button vButton;
     private TextView resultView;
 
     public MainActivityTest() {
