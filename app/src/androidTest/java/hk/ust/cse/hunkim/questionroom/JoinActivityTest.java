@@ -6,7 +6,7 @@ import android.test.ActivityInstrumentationTestCase2;
 import android.test.TouchUtils;
 import android.widget.Button;
 import android.widget.EditText;
-
+import android.widget.ImageButton;
 
 
 /**
@@ -18,7 +18,7 @@ import android.widget.EditText;
 public class JoinActivityTest extends ActivityInstrumentationTestCase2<JoinActivity> {
     JoinActivity activity;
     EditText roomNameEditText;
-    Button joinButton;
+    ImageButton joinButton;
 
     private static final int TIMEOUT_IN_MS = 5000;
 
@@ -36,7 +36,7 @@ public class JoinActivityTest extends ActivityInstrumentationTestCase2<JoinActiv
                 (EditText) activity.findViewById(R.id.room_name);
 
         joinButton =
-                (Button) activity.findViewById(R.id.join_button);
+                (ImageButton) activity.findViewById(R.id.join_button);
 
     }
 
