@@ -54,6 +54,17 @@ public class MainActivityTest extends ActivityUnitTestCase<MainActivity> {
         final TextView text = (TextView) activity.findViewById(R.id.messageInput);
         final ListView lView = getActivity().getListView();
 
+        getInstrumentation().callActivityOnStart(getActivity());
+
+        // wait for the data to be loaded by Firebase
+        try {
+            Thread.currentThread().sleep(5000);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+
+        int originalCount = lView.getCount();
+
         assertNotNull(mButton);
         assertNotNull(text);
         assertNotNull(lView);
@@ -72,7 +83,6 @@ public class MainActivityTest extends ActivityUnitTestCase<MainActivity> {
             e.printStackTrace();
         }
 
-
         getInstrumentation().runOnMainSync(new Runnable() {
             @Override
             public void run() {
@@ -85,9 +95,16 @@ public class MainActivityTest extends ActivityUnitTestCase<MainActivity> {
         text.setText("This is test! <h1>big</h1>");
         mButton.performClick();
 
-        // TODO: How to confirm a new text is posted?
-        assertEquals("Child count: ", lView.getChildCount(), 1);
+        // wait for the new row to be handled by Firebase and added to the list view
+        try {
+            Thread.currentThread().sleep(5000);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+
+        assertEquals("Child count: ", originalCount + 1, lView.getCount());
         // test XSS Protection
+        // TODO: fix this
         assertEquals("XSS test", Html.fromHtml((text.getText()).toString()), "<h1>big</h1>");
     }
 }
