@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.test.ActivityInstrumentationTestCase2;
 import android.test.TouchUtils;
 import android.view.LayoutInflater;
+import android.widget.AutoCompleteTextView;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.GridView;
@@ -31,10 +32,10 @@ import hk.ust.cse.hunkim.questionroom.question.Question;
  */
 public class JoinActivityTest extends ActivityInstrumentationTestCase2<JoinActivity> {
     JoinActivity activity;
-    EditText roomNameEditText;
+    AutoCompleteTextView roomNameEditText;
     ImageButton joinButton;
     GridView gridSuggestion;
-
+    private Intent mStartIntent;
     private static final int TIMEOUT_IN_MS = 5000;
     private TextView roomNameView;
     public JoinActivityTest() {
@@ -44,20 +45,22 @@ public class JoinActivityTest extends ActivityInstrumentationTestCase2<JoinActiv
     @Override
     protected void setUp() throws Exception {
         super.setUp();
-
+        mStartIntent = new Intent(Intent.ACTION_MAIN);
+        //activity.startActivity(mStartIntent);
+        //startActivity(mStartIntent, null, null);
         activity = getActivity();
+        //activity.setIntent(mStartIntent);
+        //roomNameEditText = (AutoCompleteTextView) activity.findViewById(R.id.room_name);
 
-        roomNameEditText =
-                (EditText) activity.findViewById(R.id.room_name);
 
-        joinButton =
-                (ImageButton) activity.findViewById(R.id.join_button);
+
+
+        //joinButton = (ImageButton) activity.findViewById(R.id.join_button);
 
         // Edit testing for suggestionRoom getView
 
-        gridSuggestion = (GridView) activity.findViewById(R.id.List2View);
-        testSuggestionRoom();
-        testCreateButtonforGridview();
+        //gridSuggestion = (GridView) activity.findViewById(R.id.List2View);
+
 
     }
 
@@ -93,7 +96,7 @@ public class JoinActivityTest extends ActivityInstrumentationTestCase2<JoinActiv
             }
         });
 
-        assertEquals("Room detected by the class and room from firebase",rooms,oldRoom);
+        //assertEquals("Room detected by the class and room from firebase",rooms,oldRoom);
 
     }
 
@@ -107,7 +110,6 @@ public class JoinActivityTest extends ActivityInstrumentationTestCase2<JoinActiv
         Button btn = (Button) activity.findViewById(R.id.suggestionRoom);
         btn.setText(testRoomName);
         ButtonViewAdapter testButton = new ButtonViewAdapter(m.getBaseContext(), rooms, roomNameView);
-
         assertEquals("Item inside adapter must be a button following layout suggestionRoom", testButton.getItem(1),btn);
         assertEquals("Button inside adapter must have text same with testRoomName",testButton.getItem(1).toString(),btn.getText());
 
@@ -200,6 +202,7 @@ public class JoinActivityTest extends ActivityInstrumentationTestCase2<JoinActiv
         assertEquals("all", intent.getStringExtra(JoinActivity.ROOM_NAME));
 
         assertEquals("This is set correctly", "Room name: all", mainActivity.getTitle());
+
 
         //Unregister monitor for ReceiverActivity
         getInstrumentation().removeMonitor(receiverActivityMonitor);
