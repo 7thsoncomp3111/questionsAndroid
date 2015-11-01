@@ -1,17 +1,22 @@
 package hk.ust.cse.hunkim.questionroom;
 
 import android.app.Activity;
+import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.PorterDuff;
 import android.text.Html;
+import android.text.util.Linkify;
 import android.view.View;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.TextView;
 
 import com.firebase.client.Query;
 
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.regex.Pattern;
 
 import hk.ust.cse.hunkim.questionroom.db.DBUtil;
 import hk.ust.cse.hunkim.questionroom.question.Question;
@@ -28,14 +33,15 @@ public class QuestionListAdapter extends FirebaseListAdapter<Question> {
     // The mUsername for this client. We use this to indicate which messages originated from this user
     private String roomName;
     MainActivity activity;
+    private static ArrayList<String> messagesWithTag;
 
-    public QuestionListAdapter(Query ref, Activity activity, int layout, String roomName) {
+    public QuestionListAdapter(Query ref, Activity activity, int layout, String room_Name) {
         super(ref, Question.class, layout, activity);
-
+        roomName = room_Name;
         // Must be MainActivity
         assert (activity instanceof MainActivity);
 
-        this.activity = (MainActivity) activity;
+       this.activity = (MainActivity) activity;
     }
 
     /**
@@ -97,6 +103,17 @@ public class QuestionListAdapter extends FirebaseListAdapter<Question> {
         msgString += "<B>" + Html.escapeHtml(question.getHead()) + "</B>" + Html.escapeHtml(question.getDesc());
 
         ((TextView) view.findViewById(R.id.head_desc)).setText(Html.fromHtml(msgString));
+        //Pattern to find if there's a hash tag in the message
+        //i.e. any word starting with a # and containing letter or numbers or _
+        Pattern tagMatcher = Pattern.compile("[#]+[A-Za-z0-9-_]+\\b");
+
+        //Scheme for Linkify, when a word matched tagMatcher pattern,
+        //the room name and that word is appended to this URL and used as content URI
+        String newActivityURL = "content://hk.ust.cse.hunkim.questionroom.tagdetailsactivity/"+roomName+"/";
+
+        //Attach Linkify to TextView
+        Linkify.addLinks(((TextView) view.findViewById(R.id.head_desc)), tagMatcher, newActivityURL);
+
         view.setOnClickListener(new View.OnClickListener() {
                                     @Override
                                     public void onClick(View view) {
@@ -140,4 +157,18 @@ public class QuestionListAdapter extends FirebaseListAdapter<Question> {
     protected void setKey(String key, Question model) {
         model.setKey(key);
     }
+
+    public Question getItem(int i) {
+        return mModels.get(i);
+    }
+
+
+    public ArrayList<String> GetAllTaggedQuestions(String tag){
+        for (int i = 0; i < getCount(); i++){
+            if (getItem(i).getWholeMsg().contains(tag))
+                messagesWithTag.add(getItem(i).getWholeMsg());
+        }
+        return messagesWithTag;
+    }
 }
+

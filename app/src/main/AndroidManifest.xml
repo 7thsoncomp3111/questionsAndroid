@@ -25,6 +25,20 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+
+        <provider
+            android:name="hk.ust.cse.hunkim.questionroom.TagProvider"
+            android:authorities="hk.ust.cse.hunkim.questionroom.tagdetailsactivity" />
+
+        <activity android:name=".TagDetailsActivity"
+            android:label = "@string/app_name">
+            <intent-filter >
+                <action android:name="android.intent.action.VIEW" />
+                <category android:name="android.intent.category.DEFAULT" />
+                <data android:mimeType="vnd.android.cursor.item/vnd.cc.tag" />
+            </intent-filter>
+        </activity>
+
     </application>
 
 </manifest>
