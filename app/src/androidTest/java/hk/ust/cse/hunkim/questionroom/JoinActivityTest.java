@@ -1,12 +1,26 @@
 package hk.ust.cse.hunkim.questionroom;
 
 import android.app.Instrumentation;
+import android.content.Context;
 import android.content.Intent;
 import android.test.ActivityInstrumentationTestCase2;
 import android.test.TouchUtils;
+import android.view.LayoutInflater;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.GridView;
 import android.widget.ImageButton;
+import android.widget.TextView;
+
+import com.firebase.client.DataSnapshot;
+import com.firebase.client.Firebase;
+import com.firebase.client.FirebaseError;
+import com.firebase.client.ValueEventListener;
+
+import java.util.ArrayList;
+
+import hk.ust.cse.hunkim.questionroom.question.ButtonViewAdapter;
+import hk.ust.cse.hunkim.questionroom.question.Question;
 
 
 /**
@@ -19,9 +33,10 @@ public class JoinActivityTest extends ActivityInstrumentationTestCase2<JoinActiv
     JoinActivity activity;
     EditText roomNameEditText;
     ImageButton joinButton;
+    GridView gridSuggestion;
 
     private static final int TIMEOUT_IN_MS = 5000;
-
+    private TextView roomNameView;
     public JoinActivityTest() {
         super(JoinActivity.class);
     }
@@ -38,7 +53,69 @@ public class JoinActivityTest extends ActivityInstrumentationTestCase2<JoinActiv
         joinButton =
                 (ImageButton) activity.findViewById(R.id.join_button);
 
+        // Edit testing for suggestionRoom getView
+
+        gridSuggestion = (GridView) activity.findViewById(R.id.List2View);
+        testSuggestionRoom();
+        testCreateButtonforGridview();
+
     }
+
+    // Edit to add test on suggestionRoom and button title
+
+    public void testSuggestionRoom(){
+
+
+        Firebase mFirebaseRef;
+        final String FIREBASE_URL = "https://resplendent-inferno-9346.firebaseio.com/";
+
+        JoinActivity m = new JoinActivity();
+        final ArrayList<String> rooms = null;
+        ArrayList<String> oldRoom = m.getRooms();
+
+
+        mFirebaseRef = new Firebase(FIREBASE_URL).child("room");
+
+
+
+        mFirebaseRef.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot snapshot) {
+
+                for (DataSnapshot postSnapshot : snapshot.getChildren()) {
+                    rooms.add(postSnapshot.getKey());
+                }
+            }
+
+            @Override
+            public void onCancelled(FirebaseError firebaseError) {
+
+            }
+        });
+
+        assertEquals("Room detected by the class and room from firebase",rooms,oldRoom);
+
+    }
+
+    public void testCreateButtonforGridview(){
+
+        roomNameView = roomNameEditText;
+        ArrayList<String> rooms = new ArrayList<String>();
+        String testRoomName = "Test Room Name";
+        rooms.add(testRoomName);
+        JoinActivity m = new JoinActivity();
+        Button btn = (Button) activity.findViewById(R.id.suggestionRoom);
+        btn.setText(testRoomName);
+        ButtonViewAdapter testButton = new ButtonViewAdapter(m.getBaseContext(), rooms, roomNameView);
+
+        assertEquals("Item inside adapter must be a button following layout suggestionRoom", testButton.getItem(1),btn);
+        assertEquals("Button inside adapter must have text same with testRoomName",testButton.getItem(1).toString(),btn.getText());
+
+    }
+
+    // End of testing for suggestion room
+
+
 
     /*
     public void testIntentSetting() {

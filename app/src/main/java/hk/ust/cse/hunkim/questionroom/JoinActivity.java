@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.inputmethod.EditorInfo;
@@ -99,7 +100,7 @@ public class JoinActivity extends Activity {
 
             }
         });
-
+        Log.v("JoinActivity", "test");
         btn2.notifyDataSetChanged();
 
 
@@ -145,5 +146,10 @@ public class JoinActivity extends Activity {
         // Make sure alphanumeric characters
         return !room_name.matches("^.*[^a-zA-Z0-9 ].*$");
     }
+
+    public ArrayList<String> getRooms(){
+        return rooms;
+    }
 }
+
 
