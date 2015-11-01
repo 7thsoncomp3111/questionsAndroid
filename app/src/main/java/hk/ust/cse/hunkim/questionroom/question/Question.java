@@ -25,7 +25,6 @@ public class Question implements Comparable<Question> {
     private String linkedDesc;
     private boolean completed;
     private long timestamp;
-    //private String tags;
     private int upvote;
     private float upvotePercent;
     private int downvote;
@@ -146,10 +145,6 @@ public class Question implements Comparable<Question> {
     public long getTimestamp() {
         return timestamp;
     }
-
-    /*public String getTags() {
-        return tags;
-    }*/
 
     public int getOrder() {
         return order;

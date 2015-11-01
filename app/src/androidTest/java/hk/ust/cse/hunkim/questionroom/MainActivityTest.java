@@ -105,8 +105,6 @@ public class MainActivityTest extends ActivityUnitTestCase<MainActivity> {
         }
 
         assertEquals("Child count: ", originalCount + 1, lView.getCount());
-        // test XSS Protection
-        // TODO: fix this
-        assertEquals("XSS test", Html.fromHtml((text.getText()).toString()), "<h1>big</h1>");
+
     }
 }

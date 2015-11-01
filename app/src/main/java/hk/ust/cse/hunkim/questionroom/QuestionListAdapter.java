@@ -168,13 +168,5 @@ public class QuestionListAdapter extends FirebaseListAdapter<Question> {
         return mModels.get(i);
     }
 
-
-    public ArrayList<String> GetAllTaggedQuestions(String tag){
-        for (int i = 0; i < getCount(); i++){
-            if (getItem(i).getWholeMsg().contains(tag))
-                messagesWithTag.add(getItem(i).getWholeMsg());
-        }
-        return messagesWithTag;
-    }
 }
 
