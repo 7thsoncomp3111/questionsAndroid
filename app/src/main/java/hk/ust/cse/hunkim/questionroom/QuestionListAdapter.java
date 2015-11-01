@@ -1,6 +1,7 @@
 package hk.ust.cse.hunkim.questionroom;
 
 import android.app.Activity;
+import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.PorterDuff;
 import android.text.Html;
@@ -34,9 +35,9 @@ public class QuestionListAdapter extends FirebaseListAdapter<Question> {
     MainActivity activity;
     private static ArrayList<String> messagesWithTag;
 
-    public QuestionListAdapter(Query ref, Activity activity, int layout, String roomName) {
+    public QuestionListAdapter(Query ref, Activity activity, int layout, String room_Name) {
         super(ref, Question.class, layout, activity);
-
+        roomName = room_Name;
         // Must be MainActivity
         assert (activity instanceof MainActivity);
 
@@ -90,8 +91,8 @@ public class QuestionListAdapter extends FirebaseListAdapter<Question> {
         Pattern tagMatcher = Pattern.compile("[#]+[A-Za-z0-9-_]+\\b");
 
         //Scheme for Linkify, when a word matched tagMatcher pattern,
-        //that word is appended to this URL and used as content URI
-        String newActivityURL = "content://hk.ust.cse.hunkim.questionroom.tagdetailsactivity/";
+        //the room name and that word is appended to this URL and used as content URI
+        String newActivityURL = "content://hk.ust.cse.hunkim.questionroom.tagdetailsactivity/"+roomName+"/";
 
         //Attach Linkify to TextView
         Linkify.addLinks(((TextView) view.findViewById(R.id.head_desc)), tagMatcher, newActivityURL);
