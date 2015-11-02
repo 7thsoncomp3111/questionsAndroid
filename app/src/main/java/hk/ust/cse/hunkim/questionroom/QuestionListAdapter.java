@@ -115,7 +115,7 @@ public class QuestionListAdapter extends FirebaseListAdapter<Question> {
         //Attach Linkify to TextView
         Linkify.addLinks(((TextView) view.findViewById(R.id.head_desc)), tagMatcher, newActivityURL);
 
-        view.setOnClickListener(new View.OnClickListener() {
+        /*view.setOnClickListener(new View.OnClickListener() {
                                     @Override
                                     public void onClick(View view) {
                                         MainActivity m = (MainActivity) view.getContext();
@@ -123,7 +123,7 @@ public class QuestionListAdapter extends FirebaseListAdapter<Question> {
                                     }
                                 }
 
-        );
+        );*/
 
         // check if we already clicked
         boolean clickable = !dbUtil.contains(question.getKey());
