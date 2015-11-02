@@ -96,7 +96,7 @@ public class JoinActivityTest extends ActivityInstrumentationTestCase2<JoinActiv
             }
         });
 
-        //assertEquals("Room detected by the class and room from firebase",rooms,oldRoom);
+        assertEquals("Room detected by the class and room from firebase",rooms,oldRoom);
 
     }
 
