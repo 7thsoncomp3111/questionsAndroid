@@ -107,4 +107,92 @@ public class MainActivityTest extends ActivityUnitTestCase<MainActivity> {
         assertEquals("Child count: ", originalCount + 1, lView.getCount());
 
     }
+
+    public void testUpvoteFeature() {
+        Button upvoteButton;
+        Activity activity = startActivity(mStartIntent, null, null);
+        final ListView lView = getActivity().getListView();
+        assertNotNull(lView);
+
+        getInstrumentation().callActivityOnStart(getActivity());
+
+// wait for the data to be loaded by Firebase
+        try {
+            Thread.currentThread().sleep(5000);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+
+        upvoteButton = (Button) lView.getChildAt(0).findViewById(R.id.echo);
+        assertNotNull(upvoteButton);
+
+        int initialUpvote = Integer.parseInt(upvoteButton.getText().toString());
+        boolean initialClickable = upvoteButton.isClickable();
+
+        getInstrumentation().waitForIdleSync();
+
+        upvoteButton.performClick();
+
+        try {
+            Thread.currentThread().sleep(5000);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+
+        if(initialClickable)
+        {
+            int postUpvote = Integer.parseInt(upvoteButton.getText().toString());
+            assertEquals("Upvote should increase by one", initialUpvote+1, postUpvote);
+            assertEquals("Upvote button.clickable should be false", false, upvoteButton.isClickable());
+        }
+        else
+        {
+            int postUpvote = Integer.parseInt(upvoteButton.getText().toString());
+            assertEquals("Upvote should not increased by one", initialUpvote, postUpvote);
+        }
+    }
+
+    public void testDownvoteFeature() {
+        Button downvoteButton;
+        Activity activity = startActivity(mStartIntent, null, null);
+        final ListView lView = getActivity().getListView();
+        assertNotNull(lView);
+
+        getInstrumentation().callActivityOnStart(getActivity());
+
+// wait for the data to be loaded by Firebase
+        try {
+            Thread.currentThread().sleep(5000);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+
+        downvoteButton = (Button) lView.getChildAt(0).findViewById(R.id.minecho);
+        assertNotNull(downvoteButton);
+
+        int initialDownvote = Integer.parseInt(downvoteButton.getText().toString());
+        boolean initialClickable = downvoteButton.isClickable();
+
+        getInstrumentation().waitForIdleSync();
+
+        downvoteButton.performClick();
+
+        try {
+            Thread.currentThread().sleep(5000);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+
+        if(initialClickable)
+        {
+            int postUpvote = Integer.parseInt(downvoteButton.getText().toString());
+            assertEquals("Downvote should increase by one", initialDownvote+1, postUpvote);
+            assertEquals("Downvote button.clickable should be false", false, downvoteButton.isClickable());
+        }
+        else
+        {
+            int postUpvote = Integer.parseInt(downvoteButton.getText().toString());
+            assertEquals("Downvote should not increased by one", initialDownvote, postUpvote);
+        }
+    }
 }
