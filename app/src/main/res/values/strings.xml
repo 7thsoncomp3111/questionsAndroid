@@ -10,4 +10,11 @@
     <string name="error_invalid_room_name">Use only alphanumeric characters</string>
     <string name="error_field_required">This field is required</string>
 
+    <string-array name="sorting_array">
+        <item>Title</item>
+        <item>Activity</item>
+        <item>Date</item>
+        <item>Rating</item>
+    </string-array>
+
 </resources>
