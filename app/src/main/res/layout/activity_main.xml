@@ -33,24 +33,10 @@
             android:textAppearance="?android:attr/textAppearanceLarge"
             android:text="Room Name"
             android:id="@+id/roomname_View"
-            android:layout_weight="1"
+            android:layout_weight="0.4"
             android:textColor="#fff"
             android:autoText="false"
             android:gravity="center" />
-
-        <Spinner
-            android:id="@+id/static_spinner"
-            android:textAppearance="?android:attr/textAppearanceLarge"
-            android:textColor="#fff"
-            android:layout_width="75dp"
-            android:layout_height="fill_parent" />
-
-        <Spinner
-            android:id="@+id/dynamic_spinner"
-            android:textAppearance="?android:attr/textAppearanceLarge"
-            android:textColor="#fff"
-            android:layout_width="75dp"
-            android:layout_height="fill_parent" />
 
     </LinearLayout>
 
