@@ -65,6 +65,12 @@
             android:singleLine="true" />
 
         <ImageButton
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/uploadImage"
+            android:src="@drawable/abc_btn_radio_to_on_mtrl_015" />
+
+        <ImageButton
             android:id="@+id/sendButton"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
