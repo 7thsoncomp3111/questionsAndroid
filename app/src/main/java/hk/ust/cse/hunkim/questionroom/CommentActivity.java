@@ -1,7 +1,6 @@
 package hk.ust.cse.hunkim.questionroom;
 
 import android.app.Activity;
-import android.app.ListActivity;
 import android.content.Intent;
 import android.database.Cursor;
 import android.database.DataSetObserver;
@@ -16,7 +15,6 @@ import android.view.inputmethod.EditorInfo;
 import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.firebase.client.DataSnapshot;
 import com.firebase.client.Firebase;
@@ -28,17 +26,18 @@ import java.io.IOException;
 
 import hk.ust.cse.hunkim.questionroom.db.DBHelper;
 import hk.ust.cse.hunkim.questionroom.db.DBUtil;
-import hk.ust.cse.hunkim.questionroom.question.Question;
+import hk.ust.cse.hunkim.questionroom.question.Thread;
 import hk.ust.cse.hunkim.questionroom.question.uploadPicture;
 
-public class MainActivity extends ListActivity {
+public class CommentActivity extends MainActivity {
 
     // TODO: change this to your own Firebase URL
     private static final String FIREBASE_URL = "https://resplendent-inferno-9346.firebaseio.com/";
     private String roomName;
+    private String key;
     private Firebase mFirebaseRef;
     private ValueEventListener mConnectedListener;
-    private QuestionListAdapter mChatListAdapter;
+    private ThreadListAdapter mChatListAdapter;
     private static final int GET_FROM_GALLERY = 1;
     private DBUtil dbutil;
 
@@ -60,26 +59,17 @@ public class MainActivity extends ListActivity {
 
         // Make it a bit more reliable
         roomName = intent.getStringExtra(JoinActivity.ROOM_NAME);
+        key = intent.getStringExtra("Key");
         if (roomName == null || roomName.length() == 0) {
             roomName = "all";
         }
 
-        setTitle("Room name: " + roomName);
 
         // Setup our Firebase mFirebaseRef
-        mFirebaseRef = new Firebase(FIREBASE_URL).child("room").child(roomName).child("questions");
-
-        // Edit by Erez, give a header title for each room
+        mFirebaseRef = new Firebase(FIREBASE_URL).child("room").child(roomName).child("threads");
 
         TextView p = (TextView) findViewById(R.id.roomname_View);
-
-        if(roomName.length() > 10){
-            String q = roomName.substring(0,10) + "...";
-            p.setText(q);
-        } else {
-            p.setText(roomName);
-        }
-        //p.setText(roomName);
+        p.setText(key);
 
         //
 
@@ -158,9 +148,11 @@ public class MainActivity extends ListActivity {
         // Setup our view and list adapter. Ensure it scrolls to the bottom as data changes
         final ListView listView = (ListView)findViewById(android.R.id.list);
         // Tell our list adapter that we only want 200 messages at a time
-        mChatListAdapter = new QuestionListAdapter(
-                mFirebaseRef.orderByChild("upvote").limitToFirst(200),
-                this, R.layout.question, roomName);
+        mChatListAdapter = new ThreadListAdapter(
+                mFirebaseRef.orderByChild("prev").equalTo(key).limitToFirst(200),
+                this, R.layout.question, roomName, key);
+        mChatListAdapter.getComment();
+        mChatListAdapter.notifyDataSetChanged();
         listView.setAdapter(mChatListAdapter);
 
         mChatListAdapter.registerDataSetObserver(new DataSetObserver() {
@@ -171,29 +163,12 @@ public class MainActivity extends ListActivity {
             }
         });
 
-        // Finally, a little indication of connection status
-        mConnectedListener = mFirebaseRef.getRoot().child(".info/connected").addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(DataSnapshot dataSnapshot) {
-                boolean connected = (Boolean) dataSnapshot.getValue();
-                if (connected) {
-                    Toast.makeText(MainActivity.this, "Connected to Firebase", Toast.LENGTH_SHORT).show();
-                } else {
-                    Toast.makeText(MainActivity.this, "Disconnected from Firebase", Toast.LENGTH_SHORT).show();
-                }
-            }
 
-            @Override
-            public void onCancelled(FirebaseError firebaseError) {
-                // No-op
-            }
-        });
     }
 
     @Override
     public void onStop() {
         super.onStop();
-        mFirebaseRef.getRoot().child(".info/connected").removeEventListener(mConnectedListener);
         mChatListAdapter.cleanup();
     }
 
@@ -202,9 +177,9 @@ public class MainActivity extends ListActivity {
         String input = inputText.getText().toString();
         if (!input.equals("")) {
             // Create our 'model', a Chat object
-            Question question = new Question(input);
+            Thread thread = new Thread(input, key);
             // Create a new, auto-generated child of that chat location, and save our chat data there
-            mFirebaseRef.push().setValue(question);
+            mFirebaseRef.push().setValue(thread);
             inputText.setText("");
         }
     }
@@ -233,23 +208,6 @@ public class MainActivity extends ListActivity {
                 }
         );
 
-        final Firebase orderRef = mFirebaseRef.child(key).child("order");
-        orderRef.addListenerForSingleValueEvent(
-                new ValueEventListener() {
-                    @Override
-                    public void onDataChange(DataSnapshot dataSnapshot) {
-                        Long orderValue = (Long) dataSnapshot.getValue();
-                        Log.e("Order update:", "" + orderValue);
-
-                        orderRef.setValue(orderValue - 1);
-                    }
-
-                    @Override
-                    public void onCancelled(FirebaseError firebaseError) {
-
-                    }
-                }
-        );
 
         // Update SQLite DB
         dbutil.put(key);
@@ -279,34 +237,14 @@ public class MainActivity extends ListActivity {
                 }
         );
 
-        final Firebase orderRef = mFirebaseRef.child(key).child("order");
-        orderRef.addListenerForSingleValueEvent(
-                new ValueEventListener() {
-                    @Override
-                    public void onDataChange(DataSnapshot dataSnapshot) {
-                        Long orderValue = (Long) dataSnapshot.getValue();
-                        Log.e("Order update:", "" + orderValue);
 
-                        orderRef.setValue(orderValue + 1);
-                    }
-
-                    @Override
-                    public void onCancelled(FirebaseError firebaseError) {
-
-                    }
-                }
-        );
 
         // Update SQLite DB
         dbutil.put(key);
     }
 
-    public void CommentActivity(String key) {
-        Intent intent = new Intent(this, CommentActivity.class);
-        intent.putExtra(JoinActivity.ROOM_NAME, roomName);
-        intent.putExtra("Key", key);
-        Log.e("Key value", "" + key);
-        startActivity(intent);
+    public void CommentActivity(String keyReceived) {
+        key = keyReceived;
     }
 
     public void Close(View view) {

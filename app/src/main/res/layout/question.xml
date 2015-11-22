@@ -9,18 +9,19 @@
         android:id="@+id/echo"
         android:drawableLeft="@drawable/like24"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content" />
+        android:layout_height="wrap_content"/>
 
     <Button
         android:id="@+id/minecho"
         android:drawableLeft="@drawable/dislike24"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content" />
+        android:layout_height="wrap_content"/>
 
     <LinearLayout
         android:orientation="vertical"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content">
+        android:layout_height="wrap_content"
+        android:layout_weight="1">
 
         <TextView
             android:id="@+id/head_desc"
@@ -32,7 +33,13 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:id="@+id/timestamp" />
-
     </LinearLayout>
+
+
+    <Button
+        android:id="@+id/comment"
+        android:drawableLeft="@drawable/ic_comment_black_24dp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" />
 
 </LinearLayout>

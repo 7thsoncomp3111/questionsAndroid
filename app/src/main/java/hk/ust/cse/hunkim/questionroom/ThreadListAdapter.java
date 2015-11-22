@@ -1,16 +1,14 @@
 package hk.ust.cse.hunkim.questionroom;
 
 import android.app.Activity;
-import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.PorterDuff;
 import android.text.Html;
+import android.text.format.DateUtils;
 import android.text.util.Linkify;
 import android.view.View;
-import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.TextView;
-import android.text.format.DateUtils;
 
 import com.firebase.client.Query;
 
@@ -20,8 +18,7 @@ import java.util.List;
 import java.util.regex.Pattern;
 
 import hk.ust.cse.hunkim.questionroom.db.DBUtil;
-import hk.ust.cse.hunkim.questionroom.question.Question;
-
+import hk.ust.cse.hunkim.questionroom.question.Thread;
 /**
  * @author greg
  * @since 6/21/13
@@ -29,20 +26,22 @@ import hk.ust.cse.hunkim.questionroom.question.Question;
  * This class is an example of how to use FirebaseListAdapter. It uses the <code>Chat</code> class to encapsulate the
  * data for each individual chat message
  */
-public class QuestionListAdapter extends FirebaseListAdapter<Question> {
+public class ThreadListAdapter extends FirebaseListAdapter<Thread> {
 
     // The mUsername for this client. We use this to indicate which messages originated from this user
     private String roomName;
+    private String key;
     MainActivity activity;
-    private static ArrayList<String> messagesWithTag;
 
-    public QuestionListAdapter(Query ref, Activity activity, int layout, String room_Name) {
-        super(ref, Question.class, layout, activity);
+    public ThreadListAdapter(Query ref, Activity activity, int layout, String room_Name, String Key) {
+        super(ref, Thread.class, layout, activity);
         roomName = room_Name;
+        key = Key;
         // Must be MainActivity
         assert (activity instanceof MainActivity);
 
        this.activity = (MainActivity) activity;
+
     }
 
     /**
@@ -51,19 +50,19 @@ public class QuestionListAdapter extends FirebaseListAdapter<Question> {
      * to the constructor, as well as a single <code>Chat</code> instance that represents the current data to bind.
      *
      * @param view     A view instance corresponding to the layout we passed to the constructor.
-     * @param question An instance representing the current state of a chat message
+     * @param thread An instance representing the current state of a chat message
      */
     @Override
-    protected void populateView(View view, Question question) {
+    protected void populateView(View view, Thread thread) {
         DBUtil dbUtil = activity.getDbutil();
 
         // Map a Chat object to an entry in our listview
-        int echo = question.getUpvote();
+        int echo = thread.getUpvote();
         Button echoButton = (Button) view.findViewById(R.id.echo);
         echoButton.setText("" + echo);
         echoButton.setTextColor(Color.BLUE);
 
-        echoButton.setTag(question.getKey()); // Set tag for button
+        echoButton.setTag(thread.getKey()); // Set tag for button
 
         echoButton.setOnClickListener(
                 new View.OnClickListener() {
@@ -76,12 +75,12 @@ public class QuestionListAdapter extends FirebaseListAdapter<Question> {
 
         );
 
-        int downvote = question.getDownvote();
+        int downvote = thread.getDownvote();
         Button downvoteButton = (Button) view.findViewById(R.id.minecho);
         downvoteButton.setText("" + downvote);
         downvoteButton.setTextColor(Color.BLUE);
 
-        downvoteButton.setTag(question.getKey());
+        downvoteButton.setTag(thread.getKey());
 
         downvoteButton.setOnClickListener(
                 new View.OnClickListener() {
@@ -95,7 +94,7 @@ public class QuestionListAdapter extends FirebaseListAdapter<Question> {
         );
 
         Button CommentButton = (Button) view.findViewById(R.id.comment);
-        CommentButton.setTag(question.getKey());
+        CommentButton.setTag(thread.getKey());
         CommentButton.setOnClickListener(
                 new View.OnClickListener() {
                     @Override
@@ -108,12 +107,9 @@ public class QuestionListAdapter extends FirebaseListAdapter<Question> {
 
         String msgString = "";
 
-        question.updateNewQuestion();
-        if (question.isNewQuestion()) {
-            msgString += "<font color=red>NEW </font>";
-        }
+
         //  escapeHTML for XSS protection
-        msgString += "<B>" + Html.escapeHtml(question.getHead()) + "</B>" + Html.escapeHtml(question.getDesc());
+        msgString += "  <B>" + (thread.getAuthor()) + "</B> " +(thread.getThreadContent());
 
         ((TextView) view.findViewById(R.id.head_desc)).setText(Html.fromHtml(msgString));
         //Pattern to find if there's a hash tag in the message
@@ -138,7 +134,7 @@ public class QuestionListAdapter extends FirebaseListAdapter<Question> {
         );*/
 
         // check if we already clicked
-        boolean clickable = !dbUtil.contains(question.getKey());
+        boolean clickable = !dbUtil.contains(thread.getKey());
 
         echoButton.setClickable(clickable);
         echoButton.setEnabled(clickable);
@@ -157,27 +153,31 @@ public class QuestionListAdapter extends FirebaseListAdapter<Question> {
             downvoteButton.getBackground().setColorFilter(Color.RED, PorterDuff.Mode.MULTIPLY);
         }
         long now = System.currentTimeMillis();
-        CharSequence relativeTime = DateUtils.getRelativeTimeSpanString(question.getTimestamp(), now, DateUtils.MINUTE_IN_MILLIS);
+        CharSequence relativeTime = DateUtils.getRelativeTimeSpanString(thread.getTimestamp(), now, DateUtils.MINUTE_IN_MILLIS);
 
         ((TextView) view.findViewById(R.id.timestamp)).setText(relativeTime);
 
 
 
-        view.setTag(question.getKey());  // store key in the view
+        view.setTag(thread.getKey());  // store key in the view
     }
 
     @Override
-    protected void sortModels(List<Question> mModels) {
+    protected void sortModels(List<Thread> mModels) {
         Collections.sort(mModels);
     }
 
     @Override
-    protected void setKey(String key, Question model) {
+    protected void setKey(String key, Thread model) {
         model.setKey(key);
     }
 
-    public Question getItem(int i) {
+    public Thread getItem(int i) {
         return mModels.get(i);
+    }
+
+    public void getComment(){
+        mModels.clear();
     }
 
 }
