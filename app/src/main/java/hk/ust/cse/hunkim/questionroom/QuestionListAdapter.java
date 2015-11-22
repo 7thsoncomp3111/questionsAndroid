@@ -54,7 +54,7 @@ public class QuestionListAdapter extends FirebaseListAdapter<Question> {
      * @param question An instance representing the current state of a chat message
      */
     @Override
-    protected void populateView(View view, Question question) {
+    protected void populateView(View view, final Question question) {
         DBUtil dbUtil = activity.getDbutil();
 
         // Map a Chat object to an entry in our listview
@@ -101,7 +101,8 @@ public class QuestionListAdapter extends FirebaseListAdapter<Question> {
                     @Override
                     public void onClick(View view) {
                         MainActivity m = (MainActivity) view.getContext();
-                        m.CommentActivity((String) view.getTag());
+                        String temp = question.getWholeMsg();
+                        m.CommentActivity((String) view.getTag(), temp);
                     }
                 }
         );

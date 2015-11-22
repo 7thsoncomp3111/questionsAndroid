@@ -301,11 +301,11 @@ public class MainActivity extends ListActivity {
         dbutil.put(key);
     }
 
-    public void CommentActivity(String key) {
+    public void CommentActivity(String key, String question) {
         Intent intent = new Intent(this, CommentActivity.class);
         intent.putExtra(JoinActivity.ROOM_NAME, roomName);
         intent.putExtra("Key", key);
-        Log.e("Key value", "" + key);
+        intent.putExtra("Question", question);
         startActivity(intent);
     }
 

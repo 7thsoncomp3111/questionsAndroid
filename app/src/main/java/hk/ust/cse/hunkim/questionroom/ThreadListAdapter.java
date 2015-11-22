@@ -12,6 +12,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.Button;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.firebase.client.ChildEventListener;
@@ -29,6 +30,8 @@ import java.util.regex.Pattern;
 import hk.ust.cse.hunkim.questionroom.db.DBUtil;
 import hk.ust.cse.hunkim.questionroom.question.*;
 import hk.ust.cse.hunkim.questionroom.question.Thread;
+
+import static android.widget.LinearLayout.*;
 
 /**
  * @param <Thread> The class type to use as a model for the data contained in the children of the given Firebase location
@@ -263,16 +266,30 @@ public class ThreadListAdapter extends BaseAdapter {
                     @Override
                     public void onClick(View view) {
                         MainActivity m = (MainActivity) view.getContext();
-                        m.CommentActivity((String) view.getTag());
+                        m.CommentActivity((String) view.getTag(),"");
                     }
                 }
         );
 
-        String msgString = "";
 
+        LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(
+                LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT);
+
+        layoutParams.setMargins(30, 0, 0, 0);
+
+        String msgString = "";
+        String indent = "  ";
+        if (!(thread.getPrev().equals(key))){
+            if (isSecondLvReply(thread))
+                echoButton.setLayoutParams(layoutParams);
+            else {
+                layoutParams.setMargins(60, 0, 0, 0);
+                echoButton.setLayoutParams(layoutParams);
+            }
+        }
 
         //  escapeHTML for XSS protection
-        msgString += "  <B>" + (thread.getAuthor()) + "</B> " +(thread.getThreadContent());
+        msgString += indent+"<B>" + (thread.getAuthor()) + "</B> " +(thread.getThreadContent());
 
         ((TextView) view.findViewById(R.id.head_desc)).setText(Html.fromHtml(msgString));
         //Pattern to find if there's a hash tag in the message
@@ -318,7 +335,7 @@ public class ThreadListAdapter extends BaseAdapter {
         long now = System.currentTimeMillis();
         CharSequence relativeTime = DateUtils.getRelativeTimeSpanString(thread.getTimestamp(), now, DateUtils.MINUTE_IN_MILLIS);
 
-        ((TextView) view.findViewById(R.id.timestamp)).setText(relativeTime);
+        ((TextView) view.findViewById(R.id.timestamp)).setText(indent+relativeTime);
 
 
 
@@ -337,12 +354,26 @@ public class ThreadListAdapter extends BaseAdapter {
         return mModels.get(i);
     }
 
+    public Thread getItem(String key) {
+        for (int i = 0; i < mModels.size(); i++)
+            if (key.equals(mModels.get(i).getKey()))
+                return mModels.get(i);
+        return null;
+    }
+
     public boolean vaildReply(Thread model){
         if (model.getPrev().equals(key))
             return true;
         for (int i = 0; i < mModels.size(); i++)
             if (model.getPrev().equals(mModels.get(i).getKey()))
                 return true;
+        return false;
+    }
+
+    public boolean isSecondLvReply(Thread model){
+        if ((model.getPrev().equals(key))) return false;
+        if (getItem(model.getPrev()).getPrev().equals(key))
+            return true;
         return false;
     }
 

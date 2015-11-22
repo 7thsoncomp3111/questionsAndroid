@@ -40,13 +40,23 @@
 
     </LinearLayout>
 
-    <ListView
-        android:id="@android:id/list"
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
+
+    <TextView
         android:layout_below="@+id/close"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/Question"/>
+
+
+    <ListView
+        android:layout_below="@+id/Question"
         android:layout_above="@+id/listFooter"
-        android:transcriptMode="alwaysScroll" />
+        android:id="@android:id/list"
+        android:textSize = "44sp"
+        android:layout_height="wrap_content"
+        android:layout_width="fill_parent">
+
+    </ListView>
 
     <LinearLayout
         android:id="@+id/listFooter"

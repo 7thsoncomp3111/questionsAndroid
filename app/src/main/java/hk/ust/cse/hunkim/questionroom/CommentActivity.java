@@ -13,6 +13,7 @@ import android.view.KeyEvent;
 import android.view.View;
 import android.view.inputmethod.EditorInfo;
 import android.widget.EditText;
+import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
 
@@ -35,8 +36,8 @@ public class CommentActivity extends MainActivity {
     private static final String FIREBASE_URL = "https://resplendent-inferno-9346.firebaseio.com/";
     private String roomName;
     private String key;
+    private String question;
     private Firebase mFirebaseRef;
-    private ValueEventListener mConnectedListener;
     private ThreadListAdapter mChatListAdapter;
     private static final int GET_FROM_GALLERY = 1;
     private DBUtil dbutil;
@@ -48,11 +49,10 @@ public class CommentActivity extends MainActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
         //initialized once with an Android context.
         Firebase.setAndroidContext(this);
 
-        setContentView(R.layout.activity_main);
+        setContentView(R.layout.activity_comment);
 
         Intent intent = getIntent();
         assert (intent != null);
@@ -60,6 +60,7 @@ public class CommentActivity extends MainActivity {
         // Make it a bit more reliable
         roomName = intent.getStringExtra(JoinActivity.ROOM_NAME);
         key = intent.getStringExtra("Key");
+        question = intent.getStringExtra("Question");
         if (roomName == null || roomName.length() == 0) {
             roomName = "all";
         }
@@ -67,9 +68,8 @@ public class CommentActivity extends MainActivity {
 
         // Setup our Firebase mFirebaseRef
         mFirebaseRef = new Firebase(FIREBASE_URL).child("room").child(roomName).child("threads");
-
         TextView p = (TextView) findViewById(R.id.roomname_View);
-        p.setText(key);
+        p.setText("Comments");
 
         //
 
@@ -153,6 +153,9 @@ public class CommentActivity extends MainActivity {
                 this, R.layout.question, roomName, key);
         mChatListAdapter.notifyDataSetChanged();
         listView.setAdapter(mChatListAdapter);
+
+        TextView q = (TextView) findViewById(R.id.Question);
+        q.setText("Question: " +question);
 
         mChatListAdapter.registerDataSetObserver(new DataSetObserver() {
             @Override
@@ -242,7 +245,7 @@ public class CommentActivity extends MainActivity {
         dbutil.put(key);
     }
 
-    public void CommentActivity(String keyReceived) {
+    public void CommentActivity(String keyReceived, String question) {
         key = keyReceived;
     }
 
