@@ -21,11 +21,12 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:onClick="Close"
-            android:src="@android:drawable/stat_notify_more"
+            android:src="@drawable/previous"
             android:background="@drawable/button_selector"
             android:layout_gravity="top|left"
             android:layout_weight="0.05"
-            style="?android:attr/borderlessButtonStyle"/>
+            style="?android:attr/borderlessButtonStyle"
+            android:foregroundGravity="center_vertical|center" />
 
         <TextView
             android:layout_width="wrap_content"
@@ -36,7 +37,8 @@
             android:layout_weight="1"
             android:textColor="#fff"
             android:autoText="false"
-            android:gravity="center" />
+            android:gravity="center"
+            android:foregroundGravity="center" />
 
         <Spinner
             android:id="@+id/static_spinner"
@@ -67,28 +69,38 @@
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
+	android:background="#FFC700"
         android:orientation="horizontal">
 
         <EditText
             android:id="@+id/messageInput"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
+            android:layout_height="fill_parent"
+            android:layout_weight="0.9"
             android:inputType="textShortMessage"
             android:lines="1"
             android:singleLine="true" />
 
         <ImageButton
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_height="match_parent"
+            android:background="@drawable/button_selector"
+            android:layout_weight="0.05"
             android:id="@+id/uploadImage"
-            android:src="@drawable/abc_btn_radio_to_on_mtrl_015" />
+            android:src="@drawable/upload"
+            android:layout_marginLeft="5dp"
+            android:foregroundGravity="center" />
 
         <ImageButton
             android:id="@+id/sendButton"
+            android:background="@drawable/button_selector"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:src="@android:drawable/ic_menu_send" />
+            android:layout_height="match_parent"
+            android:layout_weight="0.05"
+            android:src="@drawable/next"
+            android:layout_marginLeft="5dp"
+            android:layout_marginRight="5dp"
+            android:foregroundGravity="center" />
     </LinearLayout>
 
 </RelativeLayout>
