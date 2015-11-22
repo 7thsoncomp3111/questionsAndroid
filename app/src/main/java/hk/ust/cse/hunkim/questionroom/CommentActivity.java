@@ -149,9 +149,8 @@ public class CommentActivity extends MainActivity {
         final ListView listView = (ListView)findViewById(android.R.id.list);
         // Tell our list adapter that we only want 200 messages at a time
         mChatListAdapter = new ThreadListAdapter(
-                mFirebaseRef.orderByChild("prev").equalTo(key).limitToFirst(200),
+                mFirebaseRef.orderByChild("prev").limitToFirst(200),
                 this, R.layout.question, roomName, key);
-        mChatListAdapter.getComment();
         mChatListAdapter.notifyDataSetChanged();
         listView.setAdapter(mChatListAdapter);
 

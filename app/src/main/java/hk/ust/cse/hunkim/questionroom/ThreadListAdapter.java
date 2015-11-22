@@ -6,53 +6,216 @@ import android.graphics.PorterDuff;
 import android.text.Html;
 import android.text.format.DateUtils;
 import android.text.util.Linkify;
+import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
+import android.widget.BaseAdapter;
 import android.widget.Button;
 import android.widget.TextView;
 
+import com.firebase.client.ChildEventListener;
+import com.firebase.client.DataSnapshot;
+import com.firebase.client.FirebaseError;
 import com.firebase.client.Query;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.regex.Pattern;
 
 import hk.ust.cse.hunkim.questionroom.db.DBUtil;
+import hk.ust.cse.hunkim.questionroom.question.*;
 import hk.ust.cse.hunkim.questionroom.question.Thread;
+
 /**
+ * @param <Thread> The class type to use as a model for the data contained in the children of the given Firebase location
  * @author greg
  * @since 6/21/13
  * <p/>
- * This class is an example of how to use FirebaseListAdapter. It uses the <code>Chat</code> class to encapsulate the
- * data for each individual chat message
+ * This class is a generic way of backing an Android ListView with a Firebase location.
+ * It handles all of the child events at the given Firebase location. It marshals received data into the given
+ * class type. Extend this class and provide an implementation of <code>populateView</code>, which will be given an
+ * instance of your list item mLayout and an instance your class that holds your data. Simply populate the view however
+ * you like and this class will handle updating the list as the data changes.
  */
-public class ThreadListAdapter extends FirebaseListAdapter<Thread> {
+public class ThreadListAdapter extends BaseAdapter {
 
-    // The mUsername for this client. We use this to indicate which messages originated from this user
+    private Query mRef;
+    private Class<Thread> mModelClass;
+    private int mLayout;
+    private LayoutInflater mInflater;
+    public List<Thread> mModels;
+    private Map<String, Thread> mModelKeys;
+    private ChildEventListener mListener;
     private String roomName;
     private String key;
     MainActivity activity;
 
-    public ThreadListAdapter(Query ref, Activity activity, int layout, String room_Name, String Key) {
-        super(ref, Thread.class, layout, activity);
+
+    public ThreadListAdapter(Query mRef, Activity activity, int mLayout, String room_Name, String Key) {
+        this.mRef = mRef;
+        this.mModelClass = Thread.class;
+        this.mLayout = mLayout;
+        mInflater = activity.getLayoutInflater();
+        mModels = new ArrayList<Thread>();
+        mModelKeys = new HashMap<String, Thread>();
         roomName = room_Name;
         key = Key;
-        // Must be MainActivity
         assert (activity instanceof MainActivity);
 
-       this.activity = (MainActivity) activity;
+        this.activity = (MainActivity) activity;
+        // Look for all child events. We will then map them to our own internal ArrayList, which backs ListView
+        mListener = this.mRef.addChildEventListener(new ChildEventListener() {
+            @Override
+            public void onChildAdded(DataSnapshot dataSnapshot, String previousChildName) {
 
+                Thread model = dataSnapshot.getValue(ThreadListAdapter.this.mModelClass);
+                if (!vaildReply(model)) return; // skip the replies that belongs to other questions
+                String modelName = dataSnapshot.getKey();
+                mModelKeys.put(modelName, model);
+
+                // TOFIX: Any easy way to ser key?
+                setKey(modelName, model);
+
+                // bug seeded
+                // mModels.add(-1, model);
+
+                // Insert into the correct location, based on previousChildName
+                if (previousChildName == null) {
+                    mModels.add(0, model);
+                } else {
+                   if (model.getPrev().equals(key))
+                       mModels.add(model);
+                    else {
+                       for (int i = 0; i < mModels.size(); i ++)
+                           if (model.getPrev().equals(mModels.get(i).getKey())){
+                               mModels.add(i+1, model);
+                               break;
+                           }
+
+                   }
+                }
+                for (int i = 0; i < mModels.size(); i ++)
+                    Log.e("Content", "" +mModels.get(i).getThreadContent());
+                notifyDataSetChanged();
+            }
+
+            @Override
+            public void onChildChanged(DataSnapshot dataSnapshot, String s) {
+
+                // One of the mModels changed. Replace it in our list and name mapping
+                String modelName = dataSnapshot.getKey();
+                Thread oldModel = mModelKeys.get(modelName);
+                Thread newModel = dataSnapshot.getValue(ThreadListAdapter.this.mModelClass);
+
+                // TOFIX: Any easy way to ser key?
+                setKey(modelName, newModel);
+
+
+                int index = mModels.indexOf(oldModel);
+                mModels.set(index, newModel);
+
+
+                // update map
+                mModelKeys.put(modelName, newModel);
+
+                notifyDataSetChanged();
+            }
+
+            @Override
+            public void onChildRemoved(DataSnapshot dataSnapshot) {
+
+                // A model was removed from the list. Remove it from our list and the name mapping
+                String modelName = dataSnapshot.getKey();
+                Thread oldModel = mModelKeys.get(modelName);
+                mModels.remove(oldModel);
+                mModelKeys.remove(modelName);
+                notifyDataSetChanged();
+            }
+
+            @Override
+            public void onChildMoved(DataSnapshot dataSnapshot, String previousChildName) {
+
+                // A model changed position in the list. Update our list accordingly
+                String modelName = dataSnapshot.getKey();
+                Thread oldModel = mModelKeys.get(modelName);
+                Thread newModel = dataSnapshot.getValue(ThreadListAdapter.this.mModelClass);
+
+                // TOFIX: Any easy way to ser key?
+                setKey(modelName, newModel);
+
+                int index = mModels.indexOf(oldModel);
+                mModels.remove(index);
+                if (previousChildName == null) {
+                    mModels.add(0, newModel);
+                } else {
+                    Thread previousModel = mModelKeys.get(previousChildName);
+                    int previousIndex = mModels.indexOf(previousModel);
+                    int nextIndex = previousIndex + 1;
+                    if (nextIndex == mModels.size()) {
+                        mModels.add(newModel);
+                    } else {
+                        mModels.add(nextIndex, newModel);
+                    }
+                }
+                notifyDataSetChanged();
+            }
+
+            @Override
+            public void onCancelled(FirebaseError firebaseError) {
+                Log.e("ThreadListAdapter", "Listen was cancelled, no more updates will occur");
+            }
+
+        });
+    }
+
+    public void cleanup() {
+        // We're being destroyed, let go of our mListener and forget about all of the mModels
+        mRef.removeEventListener(mListener);
+        mModels.clear();
+        mModelKeys.clear();
+    }
+
+
+    @Override
+    public int getCount() {
+        return mModels.size();
+    }
+
+
+    @Override
+    public long getItemId(int i) {
+        return i;
+    }
+
+    @Override
+    public View getView(int i, View view, ViewGroup viewGroup) {
+        if (view == null) {
+            view = mInflater.inflate(mLayout, viewGroup, false);
+        }
+
+
+        // Let's get keys and models
+        Thread model = mModels.get(i);
+
+        // Call out to subclass to marshall this model into the provided view
+        populateView(view, model);
+        return view;
     }
 
     /**
-     * Bind an instance of the <code>Chat</code> class to our view. This method is called by <code>FirebaseListAdapter</code>
-     * when there is a data change, and we are given an instance of a View that corresponds to the layout that we passed
-     * to the constructor, as well as a single <code>Chat</code> instance that represents the current data to bind.
+     * Each time the data at the given Firebase location changes, this method will be called for each item that needs
+     * to be displayed. The arguments correspond to the mLayout and mModelClass given to the constructor of this class.
+     * <p/>
+     * Your implementation should populate the view using the data contained in the model.
      *
-     * @param view     A view instance corresponding to the layout we passed to the constructor.
-     * @param thread An instance representing the current state of a chat message
+     * @param v     The view to populate
+     * @param model The object containing the data used to populate the view
      */
-    @Override
+
     protected void populateView(View view, Thread thread) {
         DBUtil dbUtil = activity.getDbutil();
 
@@ -162,12 +325,10 @@ public class ThreadListAdapter extends FirebaseListAdapter<Thread> {
         view.setTag(thread.getKey());  // store key in the view
     }
 
-    @Override
     protected void sortModels(List<Thread> mModels) {
         Collections.sort(mModels);
     }
 
-    @Override
     protected void setKey(String key, Thread model) {
         model.setKey(key);
     }
@@ -176,9 +337,13 @@ public class ThreadListAdapter extends FirebaseListAdapter<Thread> {
         return mModels.get(i);
     }
 
-    public void getComment(){
-        mModels.clear();
+    public boolean vaildReply(Thread model){
+        if (model.getPrev().equals(key))
+            return true;
+        for (int i = 0; i < mModels.size(); i++)
+            if (model.getPrev().equals(mModels.get(i).getKey()))
+                return true;
+        return false;
     }
 
 }
-
