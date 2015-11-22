@@ -26,6 +26,7 @@ public class Question implements Comparable<Question> {
     private boolean completed;
     private long timestamp;
     private int upvote;
+    private int views;
     private float upvotePercent;
     private int downvote;
     private float downvotePercent;
@@ -57,6 +58,7 @@ public class Question implements Comparable<Question> {
         this.wholeMsg = message;
         this.upvote = 0;
         this.downvote = 0;
+        this.views = 0;
         this.upvotePercent = 0;
         this.downvotePercent = 0;
         this.head = getFirstSentence(message).trim();
@@ -117,6 +119,11 @@ public class Question implements Comparable<Question> {
     public int getDownvote() {
         return downvote;
     }
+
+    public int getViews() {
+        return views;
+    }
+
 
     public float getUpvotePercent() {
         return upvotePercent;

@@ -1,13 +1,11 @@
 package hk.ust.cse.hunkim.questionroom;
 
 import android.app.Activity;
-import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.PorterDuff;
 import android.text.Html;
 import android.text.util.Linkify;
 import android.view.View;
-import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.TextView;
 import android.text.format.DateUtils;
@@ -102,6 +100,7 @@ public class QuestionListAdapter extends FirebaseListAdapter<Question> {
                     public void onClick(View view) {
                         MainActivity m = (MainActivity) view.getContext();
                         String temp = question.getWholeMsg();
+                        m.updateViews((String) view.getTag());
                         m.CommentActivity((String) view.getTag(), temp);
                     }
                 }
@@ -139,7 +138,7 @@ public class QuestionListAdapter extends FirebaseListAdapter<Question> {
         );*/
 
         // check if we already clicked
-        boolean clickable = !dbUtil.contains(question.getKey());
+        boolean clickable = (!dbUtil.contains(question.getKey()));
 
         echoButton.setClickable(clickable);
         echoButton.setEnabled(clickable);

@@ -279,10 +279,10 @@ public class ThreadListAdapter extends BaseAdapter {
 
         String msgString = "";
         String indent = "  ";
-        if (!(thread.getPrev().equals(key))){
+        if (!(thread.getPrev().equals(key))){ // If it is first lv
             if (isSecondLvReply(thread))
                 echoButton.setLayoutParams(layoutParams);
-            else {
+            else {//If it is 3rd or higher level
                 layoutParams.setMargins(60, 0, 0, 0);
                 echoButton.setLayoutParams(layoutParams);
             }

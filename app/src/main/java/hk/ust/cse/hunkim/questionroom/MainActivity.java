@@ -301,6 +301,36 @@ public class MainActivity extends ListActivity {
         dbutil.put(key);
     }
 
+    public void updateViews(String key) {
+        if (dbutil.contains(key)) {
+            Log.e("Dupkey", "Key is already in the DB!");
+            return;
+        }
+
+        final Firebase viewsRef = mFirebaseRef.child(key).child("views");
+        viewsRef.addListenerForSingleValueEvent(
+                new ValueEventListener() {
+                    @Override
+                    public void onDataChange(DataSnapshot dataSnapshot) {
+                        Long viewsValue = (Long) dataSnapshot.getValue();
+                        Log.e("views update:", "" + viewsValue);
+
+                        viewsRef.setValue(viewsValue + 1);
+                    }
+
+                    @Override
+                    public void onCancelled(FirebaseError firebaseError) {
+
+                    }
+                }
+        );
+
+        // Update SQLite DB
+        dbutil.put(key);
+    }
+
+
+
     public void CommentActivity(String key, String question) {
         Intent intent = new Intent(this, CommentActivity.class);
         intent.putExtra(JoinActivity.ROOM_NAME, roomName);

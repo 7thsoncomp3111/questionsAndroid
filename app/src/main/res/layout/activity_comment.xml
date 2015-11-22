@@ -52,7 +52,7 @@
         android:layout_below="@+id/Question"
         android:layout_above="@+id/listFooter"
         android:id="@android:id/list"
-        android:textSize = "44sp"
+        android:textSize = "80sp"
         android:layout_height="wrap_content"
         android:layout_width="fill_parent">
 
