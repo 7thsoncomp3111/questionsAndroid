@@ -32,6 +32,7 @@ public class Question implements Comparable<Question> {
     private float downvotePercent;
     private int order;
     private boolean newQuestion;
+    private int view;
 
     public String getDateString() {
         return dateString;
@@ -44,6 +45,10 @@ public class Question implements Comparable<Question> {
     }
 
     private String trustedDesc;
+
+    public int getView(){
+        return view;
+    }
 
     public String getImage(){ return image; }
     // Required default constructor for Firebase object mapping

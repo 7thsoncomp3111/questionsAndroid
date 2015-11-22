@@ -1,11 +1,14 @@
 package hk.ust.cse.hunkim.questionroom;
 
 import android.app.Activity;
+import android.app.Instrumentation;
 import android.content.Intent;
 import android.test.ActivityUnitTestCase;
+import android.test.TouchUtils;
 import android.test.suitebuilder.annotation.MediumTest;
 import android.text.Html;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ListView;
 import android.widget.TextView;
@@ -34,27 +37,64 @@ public class MainActivityTest extends ActivityUnitTestCase<MainActivity> {
         // into your Activity. But do not call startActivity()
         // until the actual test methods.
         mStartIntent = new Intent(Intent.ACTION_MAIN);
-        mStartIntent.putExtra(JoinActivity.ROOM_NAME, "all");
+        mStartIntent.putExtra(JoinActivity.ROOM_NAME, "ANDROID");
     }
 
     @MediumTest
     public void testPreconditions() {
-        startActivity(mStartIntent, null, null);
-        mButton = (ImageButton) getActivity().findViewById(R.id.sendButton);
-        resultView = (TextView) getActivity().findViewById(R.id.head_desc);
+        Instrumentation.ActivityMonitor receiverActivityMonitor = getInstrumentation().addMonitor(MainActivity.class.getName(), null, false);
+        getInstrumentation().runOnMainSync(new Runnable() {
+            @Override
+            public void run() {
+                startActivity(mStartIntent, null, null);
+            }
+        });
+        MainActivity mainActivity = (MainActivity) receiverActivityMonitor.waitForActivityWithTimeout(1000);
+        mButton = (ImageButton) mainActivity.findViewById(R.id.sendButton);
+        resultView = (TextView) mainActivity.findViewById(R.id.head_desc);
         assertNotNull(getActivity());
         assertNotNull(mButton);
 
-        assertEquals("This is set correctly", "Room name: all", getActivity().getTitle());
+        assertEquals("This is set correctly", "Room name: ANDROID", mainActivity.getTitle());
     }
 
+    public void testStartPicturePicker(){
+        Instrumentation.ActivityMonitor receiverActivityMonitor = getInstrumentation().addMonitor(MainActivity.class.getName(), null, false);
+        getInstrumentation().runOnMainSync(new Runnable() {
+            @Override
+            public void run() {
+                startActivity(mStartIntent, null, null);
+            }
+        });
+        MainActivity mainActivity = (MainActivity) receiverActivityMonitor.waitForActivityWithTimeout(1000);
+        EditText inputText = (EditText) mainActivity.findViewById(R.id.messageInput);
+        ImageButton p = (ImageButton) mainActivity.findViewById(R.id.uploadImage);
+        String input = inputText.getText().toString();
+
+
+        inputText.setText("testJUnitSubmit");
+        p.performClick();
+
+        assertEquals(true,mainActivity.getGalPicker());
+
+
+    }
 
     @MediumTest
     public void testPostingMessage() {
-        Activity activity = startActivity(mStartIntent, null, null);
-        mButton = (ImageButton) activity.findViewById(R.id.sendButton);
-        final TextView text = (TextView) activity.findViewById(R.id.messageInput);
-        final ListView lView = getActivity().getListView();
+
+        Instrumentation.ActivityMonitor receiverActivityMonitor = getInstrumentation().addMonitor(MainActivity.class.getName(), null, false);
+        getInstrumentation().runOnMainSync(new Runnable() {
+            @Override
+            public void run() {
+                startActivity(mStartIntent, null, null);
+            }
+        });
+        MainActivity mainActivity = (MainActivity) receiverActivityMonitor.waitForActivityWithTimeout(1000);
+
+        mButton = (ImageButton) mainActivity.findViewById(R.id.sendButton);
+        final TextView text = (TextView) mainActivity.findViewById(R.id.messageInput);
+        final ListView lView = mainActivity.getListView();
 
         getInstrumentation().callActivityOnStart(getActivity());
 

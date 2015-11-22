@@ -3,8 +3,10 @@ package hk.ust.cse.hunkim.questionroom;
 import android.app.Instrumentation;
 import android.content.Context;
 import android.content.Intent;
+import android.support.test.InstrumentationRegistry;
 import android.test.ActivityInstrumentationTestCase2;
 import android.test.TouchUtils;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.widget.AutoCompleteTextView;
 import android.widget.Button;
@@ -17,6 +19,7 @@ import com.firebase.client.DataSnapshot;
 import com.firebase.client.Firebase;
 import com.firebase.client.FirebaseError;
 import com.firebase.client.ValueEventListener;
+import android.support.test.espresso.*;
 
 import java.util.ArrayList;
 
@@ -32,12 +35,12 @@ import hk.ust.cse.hunkim.questionroom.question.Question;
  */
 public class JoinActivityTest extends ActivityInstrumentationTestCase2<JoinActivity> {
     JoinActivity activity;
-    AutoCompleteTextView roomNameEditText;
+    EditText roomNameEditText;
     ImageButton joinButton;
-    GridView gridSuggestion;
-    private Intent mStartIntent;
+    ArrayList<String> rooms = null;
+
     private static final int TIMEOUT_IN_MS = 5000;
-    private TextView roomNameView;
+
     public JoinActivityTest() {
         super(JoinActivity.class);
     }
@@ -45,22 +48,12 @@ public class JoinActivityTest extends ActivityInstrumentationTestCase2<JoinActiv
     @Override
     protected void setUp() throws Exception {
         super.setUp();
-        mStartIntent = new Intent(Intent.ACTION_MAIN);
-        //activity.startActivity(mStartIntent);
-        //startActivity(mStartIntent, null, null);
+
         activity = getActivity();
-        //activity.setIntent(mStartIntent);
-        //roomNameEditText = (AutoCompleteTextView) activity.findViewById(R.id.room_name);
 
+        roomNameEditText = (EditText) activity.findViewById(R.id.room_name);
 
-
-
-        //joinButton = (ImageButton) activity.findViewById(R.id.join_button);
-
-        // Edit testing for suggestionRoom getView
-
-        //gridSuggestion = (GridView) activity.findViewById(R.id.List2View);
-
+        joinButton = (ImageButton) activity.findViewById(R.id.join_button);
 
     }
 
@@ -72,48 +65,20 @@ public class JoinActivityTest extends ActivityInstrumentationTestCase2<JoinActiv
         Firebase mFirebaseRef;
         final String FIREBASE_URL = "https://resplendent-inferno-9346.firebaseio.com/";
 
-        JoinActivity m = new JoinActivity();
-        final ArrayList<String> rooms = null;
-        ArrayList<String> oldRoom = m.getRooms();
-
-
-        mFirebaseRef = new Firebase(FIREBASE_URL).child("room");
-
-
-
-        mFirebaseRef.addValueEventListener(new ValueEventListener() {
+        getInstrumentation().runOnMainSync(new Runnable() {
             @Override
-            public void onDataChange(DataSnapshot snapshot) {
-
-                for (DataSnapshot postSnapshot : snapshot.getChildren()) {
-                    rooms.add(postSnapshot.getKey());
-                }
-            }
-
-            @Override
-            public void onCancelled(FirebaseError firebaseError) {
-
+            public void run() {
+                roomNameEditText.requestFocus();
             }
         });
+        getInstrumentation().waitForIdleSync();
 
-        assertEquals("Room detected by the class and room from firebase",rooms,oldRoom);
-
-    }
-
-    public void testCreateButtonforGridview(){
-
-        roomNameView = roomNameEditText;
-        ArrayList<String> rooms = new ArrayList<String>();
-        String testRoomName = "Test Room Name";
-        rooms.add(testRoomName);
-        JoinActivity m = new JoinActivity();
-        Button btn = (Button) activity.findViewById(R.id.suggestionRoom);
-        btn.setText(testRoomName);
-        ButtonViewAdapter testButton = new ButtonViewAdapter(m.getBaseContext(), rooms, roomNameView);
-        assertEquals("Item inside adapter must be a button following layout suggestionRoom", testButton.getItem(1),btn);
-        assertEquals("Button inside adapter must have text same with testRoomName",testButton.getItem(1).toString(),btn.getText());
+        rooms = activity.getRooms();
+        assertNotNull("Room detected by the class should not be null",rooms);
 
     }
+
+
 
     // End of testing for suggestion room
 
@@ -153,8 +118,7 @@ public class JoinActivityTest extends ActivityInstrumentationTestCase2<JoinActiv
 
         //Create and add an ActivityMonitor to monitor interaction between the system and the
         //ReceiverActivity
-        Instrumentation.ActivityMonitor receiverActivityMonitor = getInstrumentation()
-                .addMonitor(MainActivity.class.getName(), null, false);
+        Instrumentation.ActivityMonitor receiverActivityMonitor = getInstrumentation().addMonitor(MainActivity.class.getName(), null, false);
 
         //Request focus on the EditText field. This must be done on the UiThread because?
         getInstrumentation().runOnMainSync(new Runnable() {
@@ -167,7 +131,7 @@ public class JoinActivityTest extends ActivityInstrumentationTestCase2<JoinActiv
         getInstrumentation().waitForIdleSync();
 
         //Send the room name
-        getInstrumentation().sendStringSync("all");
+        getInstrumentation().sendStringSync("ANDROID");
         getInstrumentation().waitForIdleSync();
 
         //Click on the sendToReceiverButton to send the message to ReceiverActivity
@@ -177,8 +141,7 @@ public class JoinActivityTest extends ActivityInstrumentationTestCase2<JoinActiv
         getInstrumentation().waitForIdleSync();
 
         //Wait until MainActivity was launched and get a reference to it.
-        MainActivity mainActivity = (MainActivity) receiverActivityMonitor
-                .waitForActivityWithTimeout(TIMEOUT_IN_MS);
+        MainActivity mainActivity = (MainActivity) receiverActivityMonitor.waitForActivityWithTimeout(TIMEOUT_IN_MS);
 
         //Verify that MainActivity was started
         assertNotNull("ReceiverActivity is null", mainActivity);
@@ -199,9 +162,9 @@ public class JoinActivityTest extends ActivityInstrumentationTestCase2<JoinActiv
         Intent intent = mainActivity.getIntent();
         assertNotNull("Intent should be set", intent);
 
-        assertEquals("all", intent.getStringExtra(JoinActivity.ROOM_NAME));
+        assertEquals("ANDROID", intent.getStringExtra(JoinActivity.ROOM_NAME));
 
-        assertEquals("This is set correctly", "Room name: all", mainActivity.getTitle());
+        assertEquals("This is set correctly", "Room name: ANDROID", mainActivity.getTitle());
 
 
         //Unregister monitor for ReceiverActivity

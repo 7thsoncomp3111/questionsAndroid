@@ -109,7 +109,8 @@ public class QuestionListAdapter extends FirebaseListAdapter<Question> {
 
         if(question.getImage() != null){
 
-            new setImage((ImageView) view.findViewById(R.id.img_desc)).execute(question.getImage());
+            ImageView picture = (ImageView) view.findViewById(R.id.img_desc);
+            new setImage(picture).execute(question.getImage());
 
         } else {
 

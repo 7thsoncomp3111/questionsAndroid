@@ -51,6 +51,9 @@ public class MainActivity extends ListActivity {
     private boolean havePicture = false;
     private DBUtil dbutil;
 
+    //Add following for testing
+    private boolean galPicker = false;
+
     public DBUtil getDbutil() {
         return dbutil;
     }
@@ -189,6 +192,7 @@ public class MainActivity extends ListActivity {
                 if(input.equals("")) {
                     Toast.makeText(MainActivity.this, "Please input the message first!", Toast.LENGTH_SHORT).show();
                 } else {
+                    setPickerStart();
                     startActivityForResult(new Intent(Intent.ACTION_PICK, android.provider.MediaStore.Images.Media.INTERNAL_CONTENT_URI), GET_FROM_GALLERY);
                 }
             }
@@ -198,6 +202,15 @@ public class MainActivity extends ListActivity {
         DBHelper mDbHelper = new DBHelper(this);
         dbutil = new DBUtil(mDbHelper);
     }
+
+    public void setPickerStart(){
+        this.galPicker = true;
+    }
+
+    public boolean getGalPicker(){
+        return this.galPicker;
+    }
+    
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
@@ -222,6 +235,7 @@ public class MainActivity extends ListActivity {
 
 
         }
+
     }
 
 
@@ -241,6 +255,10 @@ public class MainActivity extends ListActivity {
         uploadedPirctureLink = msg;
         havePicture = true;
         sendMessage();
+    }
+
+    public String getUploadedPirctureLink(){
+        return uploadedPirctureLink;
     }
 
     @Override

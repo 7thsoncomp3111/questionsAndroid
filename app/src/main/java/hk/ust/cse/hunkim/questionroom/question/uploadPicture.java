@@ -39,6 +39,8 @@ public class uploadPicture extends AsyncTask<String, Void, String> {
 
     protected String doInBackground(String... FilePath) {
         try {
+
+            myActivity.setPickerStart();
             filepath = FilePath[0];
 
             uploadresult = sendPicture();
