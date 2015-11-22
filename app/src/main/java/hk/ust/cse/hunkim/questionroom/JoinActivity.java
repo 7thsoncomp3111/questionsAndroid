@@ -100,7 +100,7 @@ public class JoinActivity extends Activity {
 
             }
         });
-        Log.v("JoinActivity", "test");
+
         btn2.notifyDataSetChanged();
 
 

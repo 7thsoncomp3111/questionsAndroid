@@ -46,6 +46,8 @@ public class MainActivity extends ListActivity {
     private ValueEventListener mConnectedListener;
     private QuestionListAdapter mChatListAdapter;
     private static final int GET_FROM_GALLERY = 1;
+    private String uploadedPirctureLink = "";
+    private boolean havePicture = false;
     private DBUtil dbutil;
 
     public DBUtil getDbutil() {
@@ -149,7 +151,13 @@ public class MainActivity extends ListActivity {
         findViewById(R.id.uploadImage).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                startActivityForResult(new Intent(Intent.ACTION_PICK, android.provider.MediaStore.Images.Media.INTERNAL_CONTENT_URI), GET_FROM_GALLERY);
+                EditText inputText = (EditText) findViewById(R.id.messageInput);
+                String input = inputText.getText().toString();
+                if(input.equals("")) {
+                    Toast.makeText(MainActivity.this, "Please input the message first!", Toast.LENGTH_SHORT).show();
+                } else {
+                    startActivityForResult(new Intent(Intent.ACTION_PICK, android.provider.MediaStore.Images.Media.INTERNAL_CONTENT_URI), GET_FROM_GALLERY);
+                }
             }
         });
 
@@ -169,7 +177,8 @@ public class MainActivity extends ListActivity {
             try {
                 bitmap = MediaStore.Images.Media.getBitmap(this.getContentResolver(), selectedImage);
                 String filePath = getPath(selectedImage);
-                new uploadPicture().execute(filePath);
+                new uploadPicture(this).execute(filePath);
+
             } catch (FileNotFoundException e) {
                 // TODO Auto-generated catch block
                 e.printStackTrace();
@@ -193,6 +202,12 @@ public class MainActivity extends ListActivity {
         String imagePath = cursor.getString(column_index);
 
         return cursor.getString(column_index);
+    }
+
+    public void setUploadedPirctureLink(String msg){
+        uploadedPirctureLink = msg;
+        havePicture = true;
+        sendMessage();
     }
 
     @Override
@@ -245,11 +260,21 @@ public class MainActivity extends ListActivity {
         EditText inputText = (EditText) findViewById(R.id.messageInput);
         String input = inputText.getText().toString();
         if (!input.equals("")) {
+            if(havePicture) {
+                // Concat the actual string with the image upload link
+                input = input + uploadedPirctureLink;
+            } else {
+                if(input.contains("<img")){
+                    Toast.makeText(MainActivity.this, "Please don't input img tag on the message", Toast.LENGTH_SHORT).show();
+                    return;
+                }
+            }
             // Create our 'model', a Chat object
             Question question = new Question(input);
             // Create a new, auto-generated child of that chat location, and save our chat data there
             mFirebaseRef.push().setValue(question);
             inputText.setText("");
+            uploadedPirctureLink = "";
         }
     }
 

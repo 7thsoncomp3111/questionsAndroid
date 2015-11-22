@@ -1,5 +1,7 @@
 package hk.ust.cse.hunkim.questionroom.question;
 
+import android.app.Activity;
+import android.content.Context;
 import android.os.AsyncTask;
 import android.util.Log;
 
@@ -14,6 +16,8 @@ import com.amazonaws.services.s3.model.S3Object;
 import java.util.Arrays;
 import java.util.List;
 
+import hk.ust.cse.hunkim.questionroom.MainActivity;
+
 /**
  * Created by ReynaldiWijaya on 20/11/15.
  */
@@ -23,18 +27,27 @@ public class uploadPicture extends AsyncTask<String, Void, String> {
     private String filepath;
     private String aws_id;
     private String aws_pass;
-    private boolean uploadresult;
+    private String uploadresult;
     private static Permission Read;
+    private MainActivity myActivity;
+    private Context mContext;
+
+    public uploadPicture(Context myContext){
+        mContext = myContext;
+        myActivity = (MainActivity) mContext;
+    }
 
     protected String doInBackground(String... FilePath) {
         try {
             filepath = FilePath[0];
 
             uploadresult = sendPicture();
-            if(uploadresult) {
-                return "Executed successfully";
-            } else {
+            if(uploadresult == "Error Executing") {
                 return "Error executing, existing file found";
+            } else {
+
+                return uploadresult;
+
             }
         } catch (Exception e) {
             this.exception = e;
@@ -46,7 +59,8 @@ public class uploadPicture extends AsyncTask<String, Void, String> {
     }
 
     protected void onPostExecute(String result){
-        Log.v("Upload picture", result);
+
+        myActivity.setUploadedPirctureLink(result);
     }
 
     public String checkName(AmazonS3Client sClient, String keyname){
@@ -61,7 +75,11 @@ public class uploadPicture extends AsyncTask<String, Void, String> {
 
     }
 
-    public boolean sendPicture(){
+    public String sendBacktheLink(){
+        return uploadresult;
+    }
+
+    public String sendPicture(){
 
          try {
              aws_id = "AKIAIZEFM6CFYRMWAWTQ";
@@ -78,11 +96,14 @@ public class uploadPicture extends AsyncTask<String, Void, String> {
 
              PutObjectRequest por = new PutObjectRequest("comp3111images", keyname, new java.io.File(filepath));
              s3Client.putObject(por.withAccessControlList(acl));
-             return true;
+
+             String newMsg = " <img src=\"https://s3-ap-southeast-1.amazonaws.com/comp3111images/"+keyname+"\" />";
+
+             return newMsg;
 
          } catch (Exception e){
              e.printStackTrace();
-             return false;
+             return "Error Executing";
          }
 
     }

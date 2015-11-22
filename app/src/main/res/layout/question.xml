@@ -22,6 +22,12 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content">
 
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/img_desc"
+            android:layout_marginLeft="5dp"/>
+
         <TextView
             android:id="@+id/head_desc"
             android:layout_width="wrap_content"

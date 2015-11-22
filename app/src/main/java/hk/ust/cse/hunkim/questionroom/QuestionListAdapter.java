@@ -6,9 +6,11 @@ import android.graphics.Color;
 import android.graphics.PorterDuff;
 import android.text.Html;
 import android.text.util.Linkify;
+import android.util.Log;
 import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.text.format.DateUtils;
 
@@ -21,6 +23,7 @@ import java.util.regex.Pattern;
 
 import hk.ust.cse.hunkim.questionroom.db.DBUtil;
 import hk.ust.cse.hunkim.questionroom.question.Question;
+import hk.ust.cse.hunkim.questionroom.question.setImage;
 
 /**
  * @author greg
@@ -35,6 +38,7 @@ public class QuestionListAdapter extends FirebaseListAdapter<Question> {
     private String roomName;
     MainActivity activity;
     private static ArrayList<String> messagesWithTag;
+    private String checkParse;
 
     public QuestionListAdapter(Query ref, Activity activity, int layout, String room_Name) {
         super(ref, Question.class, layout, activity);
@@ -100,8 +104,22 @@ public class QuestionListAdapter extends FirebaseListAdapter<Question> {
         if (question.isNewQuestion()) {
             msgString += "<font color=red>NEW </font>";
         }
+
+        //check Parse
+        checkParse = question.getWholeMsg();
+        if(checkParse.contains("<img src=")){
+            String[] messageParsed = checkParse.split("<img src=\"");
+            String[] messageParsed2 = messageParsed[1].split("\"");
+            new setImage((ImageView) view.findViewById(R.id.img_desc)).execute(messageParsed2[0]);
+            String parsedMsg = messageParsed[0];
+            msgString += "<B>" + Html.escapeHtml(parsedMsg) + "</B>" + Html.escapeHtml(question.getDesc());
+        } else {
+            msgString += "<B>" + Html.escapeHtml(question.getHead()) + "</B>" + Html.escapeHtml(question.getDesc());
+        }
+
+
         //  escapeHTML for XSS protection
-        msgString += "<B>" + Html.escapeHtml(question.getHead()) + "</B>" + Html.escapeHtml(question.getDesc());
+
 
         ((TextView) view.findViewById(R.id.head_desc)).setText(Html.fromHtml(msgString));
         //Pattern to find if there's a hash tag in the message
