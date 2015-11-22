@@ -44,13 +44,10 @@ public class uploadPicture extends AsyncTask<String, Void, String> {
             filepath = FilePath[0];
 
             uploadresult = sendPicture();
-            if(uploadresult == "Error Executing") {
-                return "Error executing, existing file found";
-            } else {
 
-                return uploadresult;
+            return uploadresult;
 
-            }
+
         } catch (Exception e) {
             this.exception = e;
             e.printStackTrace();

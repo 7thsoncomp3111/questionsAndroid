@@ -125,6 +125,7 @@ public class Question implements Comparable<Question> {
     public int getUpvote() {
         return upvote;
     }
+    public void plusUpvote() { this.upvote += 1;}
 
     public int getDownvote() {
         return downvote;
@@ -167,7 +168,7 @@ public class Question implements Comparable<Question> {
     }
 
     public void updateNewQuestion() {
-        newQuestion = this.timestamp > new Date().getTime() - 180000;
+        newQuestion = this.timestamp > new Date().getTime() - 30000;
     }
     @JsonIgnore
 

@@ -43,4 +43,9 @@ public class QuestionTest  extends TestCase {
         assertEquals("Head", "Hello?", q.getHead());
     }
 
+    public void testCompareto(){
+        Question other = new Question("Hello?Hello2",null);
+        Question other2 = new Question("Hello?Hello3",null);
+        other.compareTo(other2);
+    }
 }
