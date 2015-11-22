@@ -97,7 +97,7 @@ public class uploadPicture extends AsyncTask<String, Void, String> {
              PutObjectRequest por = new PutObjectRequest("comp3111images", keyname, new java.io.File(filepath));
              s3Client.putObject(por.withAccessControlList(acl));
 
-             String newMsg = " <img src=\"https://s3-ap-southeast-1.amazonaws.com/comp3111images/"+keyname+"\" />";
+             String newMsg = "https://s3-ap-southeast-1.amazonaws.com/comp3111images/"+keyname;
 
              return newMsg;
 

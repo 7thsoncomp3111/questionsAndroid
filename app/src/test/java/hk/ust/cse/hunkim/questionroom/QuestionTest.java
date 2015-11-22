@@ -19,7 +19,7 @@ public class QuestionTest  extends TestCase {
     protected void setUp() throws Exception {
         super.setUp();
 
-        q = new Question("Hello? This is very nice");
+        q = new Question("Hello? This is very nice",null);
     }
 
     @SmallTest

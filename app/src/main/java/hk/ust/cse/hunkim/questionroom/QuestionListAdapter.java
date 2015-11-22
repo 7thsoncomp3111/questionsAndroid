@@ -105,19 +105,17 @@ public class QuestionListAdapter extends FirebaseListAdapter<Question> {
             msgString += "<font color=red>NEW </font>";
         }
 
-        //check Parse
-        checkParse = question.getWholeMsg();
-        if(checkParse.contains("<img src=")){
-            String[] messageParsed = checkParse.split("<img src=\"");
-            String[] messageParsed2 = messageParsed[1].split("\"");
-            new setImage((ImageView) view.findViewById(R.id.img_desc)).execute(messageParsed2[0]);
-            String parsedMsg = messageParsed[0];
-            msgString += "<B>" + Html.escapeHtml(parsedMsg) + "</B>" + Html.escapeHtml(question.getDesc());
+
+
+        if(question.getImage() != null){
+
+            new setImage((ImageView) view.findViewById(R.id.img_desc)).execute(question.getImage());
+
         } else {
-            msgString += "<B>" + Html.escapeHtml(question.getHead()) + "</B>" + Html.escapeHtml(question.getDesc());
+
         }
 
-
+        msgString += "<B>" + Html.escapeHtml(question.getHead()) + "</B>" + Html.escapeHtml(question.getDesc());
         //  escapeHTML for XSS protection
 
 

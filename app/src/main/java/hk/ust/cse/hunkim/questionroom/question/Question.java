@@ -25,6 +25,7 @@ public class Question implements Comparable<Question> {
     private String linkedDesc;
     private boolean completed;
     private long timestamp;
+    private String image;
     private int upvote;
     private float upvotePercent;
     private int downvote;
@@ -44,6 +45,7 @@ public class Question implements Comparable<Question> {
 
     private String trustedDesc;
 
+    public String getImage(){ return image; }
     // Required default constructor for Firebase object mapping
     @SuppressWarnings("unused")
     private Question() {
@@ -53,7 +55,7 @@ public class Question implements Comparable<Question> {
      * Set question from a String message
      * @param message string message
      */
-    public Question(String message) {
+    public Question(String message,String imageLink) {
         this.wholeMsg = message;
         this.upvote = 0;
         this.downvote = 0;
@@ -64,7 +66,11 @@ public class Question implements Comparable<Question> {
         if (this.head.length() < message.length()) {
             this.desc = message.substring(this.head.length());
         }
-
+        if(imageLink == null){
+            this.image = null;
+        } else {
+            this.image = imageLink;
+        }
         // get the last char
         this.headLastChar = head.substring(head.length() - 1);
 

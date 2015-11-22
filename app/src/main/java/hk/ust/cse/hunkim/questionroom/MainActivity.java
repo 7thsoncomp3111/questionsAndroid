@@ -260,17 +260,19 @@ public class MainActivity extends ListActivity {
         EditText inputText = (EditText) findViewById(R.id.messageInput);
         String input = inputText.getText().toString();
         if (!input.equals("")) {
+            Question question;
             if(havePicture) {
                 // Concat the actual string with the image upload link
-                input = input + uploadedPirctureLink;
+                question = new Question(input,uploadedPirctureLink);
             } else {
                 if(input.contains("<img")){
                     Toast.makeText(MainActivity.this, "Please don't input img tag on the message", Toast.LENGTH_SHORT).show();
                     return;
                 }
+                question = new Question(input,null);
             }
             // Create our 'model', a Chat object
-            Question question = new Question(input);
+
             // Create a new, auto-generated child of that chat location, and save our chat data there
             mFirebaseRef.push().setValue(question);
             inputText.setText("");
