@@ -61,6 +61,7 @@ public class Question implements Comparable<Question> {
         this.downvote = 0;
         this.upvotePercent = 0;
         this.downvotePercent = 0;
+        this.order = 0;
         this.head = getFirstSentence(message).trim();
         this.desc = "";
         if (this.head.length() < message.length()) {

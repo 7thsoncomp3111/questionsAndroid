@@ -30,6 +30,7 @@ import com.firebase.client.ValueEventListener;
 
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.util.List;
 
 import hk.ust.cse.hunkim.questionroom.db.DBHelper;
 import hk.ust.cse.hunkim.questionroom.db.DBUtil;
@@ -119,6 +120,38 @@ public class MainActivity extends ListActivity {
             public void onItemSelected(AdapterView<?> parent, View view,
                                        int position, long id) {
                 Log.v("item", (String) parent.getItemAtPosition(position));
+                final ListView listView = (ListView)findViewById(android.R.id.list);
+
+                listView.setAdapter(null);
+
+                //Will choose Title at first
+                if(position==0)
+                {
+                    sortByTitle(listView);
+                }
+                else if (position==1)
+                {
+                    //TODO change to sortByActivity()
+                    sortByUpvote(listView);
+                }
+                else if (position==2)
+                {
+                    sortByTime(listView);
+                }
+                else
+                {
+                    sortByRating(listView);
+                }
+                listView.setAdapter(mChatListAdapter);
+
+                mChatListAdapter.registerDataSetObserver(new DataSetObserver() {
+                    @Override
+                    public void onChanged() {
+                        super.onChanged();
+                        listView.setSelection(mChatListAdapter.getCount()-1);
+                    }
+                });
+                mChatListAdapter.notifyDataSetChanged();
             }
 
             @Override
@@ -213,23 +246,6 @@ public class MainActivity extends ListActivity {
     @Override
     public void onStart() {
         super.onStart();
-
-        // Setup our view and list adapter. Ensure it scrolls to the bottom as data changes
-        final ListView listView = (ListView)findViewById(android.R.id.list);
-        // Tell our list adapter that we only want 200 messages at a time
-        mChatListAdapter = new QuestionListAdapter(
-                mFirebaseRef.orderByChild("upvote").limitToFirst(200),
-                this, R.layout.question, roomName);
-        listView.setAdapter(mChatListAdapter);
-
-        mChatListAdapter.registerDataSetObserver(new DataSetObserver() {
-            @Override
-            public void onChanged() {
-                super.onChanged();
-                listView.setSelection(mChatListAdapter.getCount() - 1);
-            }
-        });
-
         // Finally, a little indication of connection status
         mConnectedListener = mFirebaseRef.getRoot().child(".info/connected").addValueEventListener(new ValueEventListener() {
             @Override
@@ -370,6 +386,30 @@ public class MainActivity extends ListActivity {
 
         // Update SQLite DB
         dbutil.put(key);
+    }
+
+    public void sortByUpvote(ListView listView){
+        mChatListAdapter = new QuestionListAdapter(
+                mFirebaseRef.orderByChild("upvote").limitToFirst(200),
+                this, R.layout.question, roomName);
+    }
+
+    public void sortByTitle(ListView listView){
+        mChatListAdapter = new QuestionListAdapter(
+                mFirebaseRef.orderByChild("head").limitToFirst(200),
+                this, R.layout.question, roomName);
+    }
+
+    public void sortByRating(ListView listView){
+        mChatListAdapter = new QuestionListAdapter(
+                mFirebaseRef.orderByChild("upvotePercent").limitToFirst(200),
+                this, R.layout.question, roomName);
+    }
+
+    public void sortByTime(ListView listView){
+        mChatListAdapter = new QuestionListAdapter(
+                mFirebaseRef.orderByChild("timestamp").limitToFirst(200),
+                this, R.layout.question, roomName);
     }
 
     public void Close(View view) {
