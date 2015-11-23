@@ -26,6 +26,7 @@
 
 
     <LinearLayout
+        xmlns:tools="http://schemas.android.com/tools"
         android:orientation="horizontal"
         android:layout_width="wrap_content"
         android:layout_height="match_parent"
@@ -42,6 +43,14 @@
             android:drawableLeft="@drawable/replyhollowcolor"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
+            android:gravity="center" />
+
+        <Button
+            android:id="@+id/button1"
+            android:drawableLeft="@drawable/more"
+            style="?android:attr/borderlessButtonStyle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
             android:gravity="center" />
 
         <Button

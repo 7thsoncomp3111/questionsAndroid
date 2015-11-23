@@ -8,12 +8,15 @@ import android.graphics.drawable.Drawable;
 import android.text.Html;
 import android.text.util.Linkify;
 import android.util.Log;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.PopupMenu;
 import android.widget.TextView;
 import android.text.format.DateUtils;
+import android.widget.Toast;
 
 import com.firebase.client.Query;
 
@@ -98,6 +101,29 @@ public class QuestionListAdapter extends FirebaseListAdapter<Question> {
                 }
 
         );
+
+        final Button moreButton = (Button) view.findViewById(R.id.button1);
+        moreButton.setTag(question.getKey());
+        moreButton.setOnClickListener(
+                (new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        //Creating the instance of PopupMenu
+                        PopupMenu popup = new PopupMenu(activity, moreButton);
+                        //Inflating the Popup using xml file
+                        popup.getMenuInflater()
+                                .inflate(R.menu.popup_menu, popup.getMenu());
+
+                        //registering popup with OnMenuItemClickListener
+                        popup.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
+                            public boolean onMenuItemClick(MenuItem item) {
+                                return true;
+                            }
+                        });
+
+                        popup.show(); //showing popup menu
+                    }
+                })); //closing the setOnClickListener method
 
         Button CommentButton = (Button) view.findViewById(R.id.comment);
         CommentButton.setTag(question.getKey());
