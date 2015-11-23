@@ -17,8 +17,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import hk.ust.cse.hunkim.questionroom.question.*;
-import hk.ust.cse.hunkim.questionroom.question.Thread;
 
 /**
  * @param <T> The class type to use as a model for the data contained in the children of the given Firebase location

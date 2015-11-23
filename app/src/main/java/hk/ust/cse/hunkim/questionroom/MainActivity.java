@@ -263,6 +263,23 @@ public class MainActivity extends ListActivity {
     @Override
     public void onStart() {
         super.onStart();
+
+        // Setup our view and list adapter. Ensure it scrolls to the bottom as data changes
+        final ListView listView = (ListView)findViewById(android.R.id.list);
+        // Tell our list adapter that we only want 200 messages at a time
+        mChatListAdapter = new QuestionListAdapter(
+                mFirebaseRef.orderByChild("upvote").limitToFirst(200),
+                this, R.layout.question, roomName);
+        listView.setAdapter(mChatListAdapter);
+
+        mChatListAdapter.registerDataSetObserver(new DataSetObserver() {
+            @Override
+            public void onChanged() {
+                super.onChanged();
+                listView.setSelection(mChatListAdapter.getCount() - 1);
+            }
+        });
+
         // Finally, a little indication of connection status
         mConnectedListener = mFirebaseRef.getRoot().child(".info/connected").addValueEventListener(new ValueEventListener() {
             @Override
@@ -286,7 +303,7 @@ public class MainActivity extends ListActivity {
     public void onStop() {
         super.onStop();
         mFirebaseRef.getRoot().child(".info/connected").removeEventListener(mConnectedListener);
-        //mChatListAdapter.cleanup();
+        mChatListAdapter.cleanup();
     }
 
     private void sendMessage() {

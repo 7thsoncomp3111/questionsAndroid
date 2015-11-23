@@ -103,62 +103,6 @@ public class CommentActivity extends MainActivity {
         dbutil = new DBUtil(mDbHelper);
     }
 
-    public void setPickerStart(){
-        this.galPicker = true;
-    }
-
-    public boolean getGalPicker(){
-        return this.galPicker;
-    }
-
-    @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-
-
-        //Detects request codes
-        if(requestCode==GET_FROM_GALLERY && resultCode == Activity.RESULT_OK) {
-            Uri selectedImage = data.getData();
-            Bitmap bitmap = null;
-            try {
-                bitmap = MediaStore.Images.Media.getBitmap(this.getContentResolver(), selectedImage);
-                String filePath = getPath(selectedImage);
-                new uploadPicture(this).execute(filePath);
-            } catch (FileNotFoundException e) {
-                // TODO Auto-generated catch block
-                e.printStackTrace();
-            } catch (IOException e) {
-                // TODO Auto-generated catch block
-                e.printStackTrace();
-            }
-
-
-        }
-    }
-
-
-
-    public String getPath(Uri uri) {
-        String[] projection = { MediaStore.MediaColumns.DATA };
-        Cursor cursor = managedQuery(uri, projection, null, null, null);
-        int column_index = cursor
-                .getColumnIndexOrThrow(MediaStore.MediaColumns.DATA);
-        cursor.moveToFirst();
-        String imagePath = cursor.getString(column_index);
-
-        return cursor.getString(column_index);
-    }
-
-
-    public void setUploadedPirctureLink(String msg){
-        uploadedPirctureLink = msg;
-        havePicture = true;
-        sendMessage();
-    }
-
-    public String getUploadedPirctureLink(){
-        return uploadedPirctureLink;
-    }
 
     @Override
     public void onStart() {
