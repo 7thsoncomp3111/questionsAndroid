@@ -1,10 +1,20 @@
 package hk.ust.cse.hunkim.questionroom.question;
 
+import android.util.Log;
+
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.firebase.client.DataSnapshot;
+import com.firebase.client.Firebase;
+import com.firebase.client.FirebaseError;
+import com.firebase.client.ValueEventListener;
 
 
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
+
+import hk.ust.cse.hunkim.questionroom.MainActivity;
 
 /**
  * Created by hunkim on 7/16/15.
@@ -34,6 +44,8 @@ public class Question implements Comparable<Question> {
     private int order;
     private boolean newQuestion;
     private int view;
+
+
 
     public String getDateString() {
         return dateString;
@@ -194,22 +206,16 @@ public class Question implements Comparable<Question> {
      */
     @Override
     public int compareTo(Question other) {
-        // Push new on top
-        other.updateNewQuestion(); // update NEW button
-        this.updateNewQuestion();
-
-        if (this.newQuestion != other.newQuestion) {
-            return this.newQuestion ? 1 : -1; // this is the winner
-        }
+        double thisActivity = this.views/2+(this.upvote+this.downvote)*1.5+this.returnThreadNo()*2;
+        double otherActivity = other.views/2+(other.upvote+other.downvote)*1.5+other.returnThreadNo()*2;
 
 
-        if (this.upvote == other.upvote) {
-            if (other.timestamp == this.timestamp) {
+        if (thisActivity == otherActivity)
                 return 0;
-            }
-            return other.timestamp > this.timestamp ? -1 : 1;
-        }
-        return this.upvote - other.upvote;
+
+        return thisActivity > otherActivity ? 1 : -1;
+
+
     }
 
 
@@ -226,4 +232,33 @@ public class Question implements Comparable<Question> {
     public int hashCode() {
         return key.hashCode();
     }
+
+    public int returnThreadNo(){
+        final int[] counter = {0};
+        String FIREBASE_URL = "https://resplendent-inferno-9346.firebaseio.com/";
+        MainActivity activity;
+        Firebase mFirebaseRef = new Firebase(FIREBASE_URL).child("room").child(MainActivity.activity.getRoomName()).child("threads");
+        final List<Thread> mModels = new ArrayList<Thread>();
+        mFirebaseRef.orderByChild("prev").addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot snapshot) {
+                for (DataSnapshot postSnapshot : snapshot.getChildren()) {
+                    if (postSnapshot.getValue(Thread.class).getPrev().equals(getKey())){
+                        mModels.add(postSnapshot.getValue(Thread.class));
+                        continue;
+                    }
+                    for (int i = 0; i < mModels.size(); i++)
+                        if (postSnapshot.getValue(Thread.class).getPrev().equals(mModels.get(i).getKey())){
+                            mModels.add(postSnapshot.getValue(Thread.class));
+                            continue;
+                        }
+                }
+            }
+            @Override
+            public void onCancelled(FirebaseError firebaseError) {
+            }
+        });
+        return mModels.size();
+        }
 }
+

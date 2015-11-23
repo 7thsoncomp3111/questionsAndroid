@@ -41,7 +41,6 @@ public class QuestionListAdapter extends FirebaseListAdapter<Question> {
     // The mUsername for this client. We use this to indicate which messages originated from this user
     private String roomName;
     MainActivity activity;
-    private static ArrayList<String> messagesWithTag;
     private String checkParse;
 
     public QuestionListAdapter(Query ref, Activity activity, int layout, String room_Name) {
@@ -221,8 +220,9 @@ public class QuestionListAdapter extends FirebaseListAdapter<Question> {
 
     @Override
     protected void sortModels(List<Question> mModels) {
-        //Collections.sort(mModels);
+        Collections.sort(mModels);
     }
+
 
     @Override
     protected void setKey(String key, Question model) {

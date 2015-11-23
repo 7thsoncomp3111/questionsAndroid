@@ -38,6 +38,8 @@ import com.firebase.client.ValueEventListener;
 
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.util.Collection;
+import java.util.Collections;
 import java.util.List;
 
 import hk.ust.cse.hunkim.questionroom.db.DBHelper;
@@ -58,7 +60,7 @@ public class MainActivity extends ListActivity {
     private String uploadedPirctureLink = "";
     private boolean havePicture = false;
     private DBUtil dbutil;
-
+    public static MainActivity activity ;
     //Add following for testing
     private boolean galPicker = false;
 
@@ -72,7 +74,7 @@ public class MainActivity extends ListActivity {
 
         //initialized once with an Android context.
         Firebase.setAndroidContext(this);
-
+        activity = this;
         setContentView(R.layout.activity_main);
 
         Intent intent = getIntent();
@@ -191,6 +193,8 @@ public class MainActivity extends ListActivity {
     public boolean getGalPicker(){
         return this.galPicker;
     }
+
+    public String getRoomName(){return roomName;}
     
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
@@ -331,7 +335,7 @@ public class MainActivity extends ListActivity {
                         Log.e("Upvote update:", "" + upvoteValue);
                         try {
                             upvoteRef.setValue(upvoteValue + 1);
-                        } catch (Exception e){
+                        } catch (Exception e) {
                             e.printStackTrace();
                         }
                     }
@@ -353,7 +357,7 @@ public class MainActivity extends ListActivity {
 
                         try {
                             orderRef.setValue(orderValue - 1);
-                        } catch (Exception e){
+                        } catch (Exception e) {
                             e.printStackTrace();
                         }
 
@@ -442,6 +446,7 @@ public class MainActivity extends ListActivity {
             mChatListAdapter = new QuestionListAdapter(
                     mFirebaseRef.orderByChild("upvote").limitToFirst(200),
                     this, R.layout.question, roomName);
+            Collections.sort(mChatListAdapter.mModels);
         }
         else if (position==2)
         {
@@ -483,6 +488,7 @@ public class MainActivity extends ListActivity {
         String emailAdress = requestEmail();
 
     }
+
 
     public void unsubscribe(String key) {
         String emailAdress = requestEmail();
@@ -536,4 +542,6 @@ public class MainActivity extends ListActivity {
     public void Close(View view) {
         finish();
     }
+
+
 }
