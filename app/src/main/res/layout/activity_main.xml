@@ -40,12 +40,11 @@
             android:gravity="center"
             android:foregroundGravity="center" />
 
-        <Spinner
+        <Spinner style="@style/SpinnerAsEditText"
             android:id="@+id/dynamic_spinner"
-            android:textAppearance="?android:attr/textAppearanceLarge"
-            android:textColor="#fff"
-            android:layout_width="75dp"
-            android:layout_height="fill_parent" />
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:background="#FFC700" />
 
     </LinearLayout>
 

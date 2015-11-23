@@ -99,8 +99,8 @@ public class MainActivity extends ListActivity {
         String[] items = new String[] { "Title", "Activity", "Date", "Rating" };
 
         ArrayAdapter<String> adapter = new ArrayAdapter<String>(this,
-                android.R.layout.simple_spinner_item, items);
-
+                R.layout.spinner_item, R.id.spinner_title, items);
+				
         dynamicSpinner.setAdapter(adapter);
 
         dynamicSpinner.setOnItemSelectedListener(new OnItemSelectedListener() {
