@@ -9,4 +9,10 @@
 
     </style>
 
+    <style parent="@android:style/Widget.Spinner" name="SpinnerAsEditText">
+
+        <item name="android:background">@android:drawable/edit_text</item>
+
+    </style>
+
 </resources>
