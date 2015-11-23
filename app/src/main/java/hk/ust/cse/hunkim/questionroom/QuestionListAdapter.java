@@ -3,6 +3,7 @@ package hk.ust.cse.hunkim.questionroom;
 import android.app.Activity;
 import android.graphics.Color;
 import android.graphics.PorterDuff;
+import android.graphics.drawable.Drawable;
 import android.text.Html;
 import android.text.util.Linkify;
 import android.util.Log;
@@ -166,13 +167,11 @@ public class QuestionListAdapter extends FirebaseListAdapter<Question> {
 
         // http://stackoverflow.com/questions/8743120/how-to-grey-out-a-button
         // grey out our button
-        if (clickable) {
-            echoButton.getBackground().setColorFilter(null);
-            downvoteButton.getBackground().setColorFilter(null);
-        } else {
-            echoButton.getBackground().setColorFilter(Color.RED, PorterDuff.Mode.MULTIPLY);
-            downvoteButton.getBackground().setColorFilter(Color.RED, PorterDuff.Mode.MULTIPLY);
+        if (!clickable) {
+            echoButton.setCompoundDrawablesWithIntrinsicBounds( R.drawable.upvotefullcolor, 0, 0, 0);
+            downvoteButton.setCompoundDrawablesWithIntrinsicBounds( R.drawable.downvotefullcolor, 0, 0, 0);
         }
+
         long now = System.currentTimeMillis();
         CharSequence relativeTime = DateUtils.getRelativeTimeSpanString(question.getTimestamp(), now, DateUtils.MINUTE_IN_MILLIS);
 
