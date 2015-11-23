@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.database.Cursor;
 import android.database.DataSetObserver;
 import android.graphics.Bitmap;
+import android.media.Image;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
@@ -13,6 +14,7 @@ import android.view.KeyEvent;
 import android.view.View;
 import android.view.inputmethod.EditorInfo;
 import android.widget.EditText;
+import android.widget.ImageButton;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -76,8 +78,26 @@ public class CommentActivity extends MainActivity {
         TextView p = (TextView) findViewById(R.id.roomname_View);
         p.setText("Comments");
 
-        //
+        // Add listener to 'completed' value. Only admin can modify the value.
+        Firebase tempFirebaseRef = new Firebase(FIREBASE_URL).child("room").child(roomName).child("questions");
+        final ImageButton sendButton = (ImageButton) findViewById(R.id.sendButton);
 
+        final Firebase completedRef = tempFirebaseRef.child(key).child("completed");
+        completedRef.addValueEventListener(
+                new ValueEventListener() {
+                    @Override
+                    public void onDataChange(DataSnapshot dataSnapshot) {
+                        boolean completed = (boolean) dataSnapshot.getValue();
+                        sendButton.setClickable(!completed);
+
+                    }
+
+                    @Override
+                    public void onCancelled(FirebaseError firebaseError) {
+
+                    }
+                }
+        );
         // Setup our input methods. Enter key on the keyboard or pushing the send button
         EditText inputText = (EditText) findViewById(R.id.messageInput);
         inputText.setOnEditorActionListener(new TextView.OnEditorActionListener() {
