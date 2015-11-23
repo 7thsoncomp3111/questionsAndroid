@@ -302,10 +302,7 @@ public class MainActivity extends ListActivity {
     }
 
     public void updateViews(String key) {
-        if (dbutil.contains(key)) {
-            Log.e("Dupkey", "Key is already in the DB!");
-            return;
-        }
+
 
         final Firebase viewsRef = mFirebaseRef.child(key).child("views");
         viewsRef.addListenerForSingleValueEvent(
@@ -325,8 +322,6 @@ public class MainActivity extends ListActivity {
                 }
         );
 
-        // Update SQLite DB
-        dbutil.put(key);
     }
 
 
