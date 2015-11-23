@@ -111,7 +111,7 @@ public class ThreadListAdapter extends BaseAdapter {
             @Override
             public void onChildChanged(DataSnapshot dataSnapshot, String s) {
 
-                // One of the mModels changed. Replace it in our list and name mapping
+                /*// One of the mModels changed. Replace it in our list and name mapping
                 String modelName = dataSnapshot.getKey();
                 Thread oldModel = mModelKeys.get(modelName);
                 Thread newModel = dataSnapshot.getValue(ThreadListAdapter.this.mModelClass);
@@ -127,23 +127,23 @@ public class ThreadListAdapter extends BaseAdapter {
                 // update map
                 mModelKeys.put(modelName, newModel);
 
-                notifyDataSetChanged();
+                notifyDataSetChanged();*/
             }
 
             @Override
             public void onChildRemoved(DataSnapshot dataSnapshot) {
-
+/*
                 // A model was removed from the list. Remove it from our list and the name mapping
                 String modelName = dataSnapshot.getKey();
                 Thread oldModel = mModelKeys.get(modelName);
                 mModels.remove(oldModel);
                 mModelKeys.remove(modelName);
-                notifyDataSetChanged();
+                notifyDataSetChanged();*/
             }
 
             @Override
             public void onChildMoved(DataSnapshot dataSnapshot, String previousChildName) {
-
+/*
                 // A model changed position in the list. Update our list accordingly
                 String modelName = dataSnapshot.getKey();
                 Thread oldModel = mModelKeys.get(modelName);
@@ -166,7 +166,7 @@ public class ThreadListAdapter extends BaseAdapter {
                         mModels.add(nextIndex, newModel);
                     }
                 }
-                notifyDataSetChanged();
+                notifyDataSetChanged();*/
             }
 
             @Override

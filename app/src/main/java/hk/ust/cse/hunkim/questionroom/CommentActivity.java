@@ -39,7 +39,7 @@ public class CommentActivity extends MainActivity {
     private String key;
     private String question;
     private Firebase mFirebaseRef;
-    private ThreadListAdapter mChatListAdapter;
+    public ThreadListAdapter mChatListAdapter;
     private static final int GET_FROM_GALLERY = 1;
     private DBUtil dbutil;
     private String uploadedPirctureLink = "";

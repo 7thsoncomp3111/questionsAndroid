@@ -7,6 +7,7 @@ import android.test.ActivityUnitTestCase;
 import android.test.TouchUtils;
 import android.test.suitebuilder.annotation.MediumTest;
 import android.text.Html;
+import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
@@ -134,5 +135,16 @@ public class CommentActivityTest extends ActivityUnitTestCase<CommentActivity> {
             e.printStackTrace();
         }
         assertEquals("Child count: ", lView.getCount(), originalCount + 1);
+        View view = commentActivity.mChatListAdapter.getView(0, null, null);
+        assertNotNull(view);
+        Button downvoteButton = (Button) view.findViewById(R.id.minecho);
+        Button echoButton = (Button) view.findViewById(R.id.echo);
+        Button CommentButton = (Button) view.findViewById(R.id.comment);
+        assertNotNull(downvoteButton);
+        assertNotNull(echoButton);
+        assertNotNull(CommentButton);
+        downvoteButton.performClick();
+        echoButton.performClick();
+        CommentButton.performClick();
     }
 }
