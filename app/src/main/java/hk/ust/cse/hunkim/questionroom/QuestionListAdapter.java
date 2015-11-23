@@ -21,6 +21,7 @@ import android.widget.Toast;
 import com.firebase.client.Query;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 import java.util.regex.Pattern;
@@ -43,10 +44,14 @@ public class QuestionListAdapter extends FirebaseListAdapter<Question> {
     MainActivity activity;
     private static ArrayList<String> messagesWithTag;
     private String checkParse;
+    private int sortType;
+    private boolean sortNow;
 
-    public QuestionListAdapter(Query ref, Activity activity, int layout, String room_Name) {
+    public QuestionListAdapter(Query ref, Activity activity, int layout, String room_Name,boolean sortNow, int sortType) {
         super(ref, Question.class, layout, activity);
         roomName = room_Name;
+        this.sortNow = sortNow;
+        this.sortType = sortType;
         // Must be MainActivity
         //assert (activity instanceof MainActivity);
 
@@ -222,6 +227,88 @@ public class QuestionListAdapter extends FirebaseListAdapter<Question> {
     @Override
     protected void sortModels(List<Question> mModels) {
         //Collections.sort(mModels);
+        if(sortNow) {
+            List<Question> temp;
+            if(sortType == 3) {
+                int[] rating = new int[mModels.size()];
+                temp = new ArrayList<Question>(mModels.size());
+                for (int i = 0; i < mModels.size(); i++) {
+                    temp.add(i, mModels.get(i));
+                    rating[i] = mModels.get(i).getUpvote() - mModels.get(i).getDownvote();;
+                }
+
+                for (int i = 0; i < mModels.size(); i++) {
+                    for (int j = 0; j <  mModels.size() - 1; j++){
+                        if (rating[j + 1] < rating[j]){
+                            int temp12 = rating[j];
+                            Question temp22 = temp.remove(j + 1);
+                            rating[j] = rating[j + 1];
+                            temp.add(j,temp22);
+                            rating[j + 1] = temp12;
+                        }
+                    }
+                }
+
+                Collections.reverse(temp);
+
+            } else {
+
+                temp = new ArrayList<Question>(mModels.size());
+                for (int i = 0; i < mModels.size(); i++) {
+                    temp.add(i, mModels.get(i));
+                    Log.v("testete", temp.get(i).getWholeMsg());
+                }
+
+            }
+
+            sortNow = false;
+
+            int locationNormal = 0;
+            int locationPinned = 0;
+
+            mModels.clear();
+
+            for (int i = 0; i < temp.size(); i++) {
+
+                Question temp2 = temp.get(i);
+                if (temp2.getPinned()) {
+                    mModels.add(locationPinned, temp2);
+                    locationPinned += 1;
+                    locationNormal += 1;
+                } else {
+                    mModels.add(locationNormal, temp2);
+                    locationNormal += 1;
+                }
+            }
+
+
+
+            if(Arrays.asList(0, 1, 2, 500).contains(sortType)){
+                List<Question> listForDate1 = new ArrayList<Question>(locationPinned);
+                List<Question> listForDate2 = new ArrayList<Question>(mModels.size() - locationPinned);
+
+                for (int i = 0; i < locationPinned; i++) {
+                    Question temp2 = mModels.get(i);
+                    listForDate1.add(i, temp2);
+                }
+                for (int i = 0; i < mModels.size() - locationPinned; i++) {
+                    Question temp2 = mModels.get(locationPinned + i);
+                    listForDate2.add(i, temp2);
+                }
+
+                mModels.clear();
+                if(listForDate1.size() != 0 && sortType != 0) {
+                    Collections.reverse(listForDate1);
+                }
+                if(listForDate2.size() != 0 && sortType != 0) {
+                    Collections.reverse(listForDate2);
+                }
+                mModels.addAll(listForDate1);
+                mModels.addAll(listForDate2);
+                //Collections.reverse(mModels);
+            }
+
+        }
     }
 
     @Override
