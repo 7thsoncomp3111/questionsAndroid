@@ -225,7 +225,6 @@ public class QuestionListAdapter extends FirebaseListAdapter<Question> {
 
     @Override
     protected void sortModels(List<Question> mModels) {
-        Collections.sort(mModels);
 
         if(sortNow) {
             List<Question> temp;
@@ -283,7 +282,7 @@ public class QuestionListAdapter extends FirebaseListAdapter<Question> {
 
 
 
-            if(Arrays.asList(0, 1, 2, 500).contains(sortType)){
+            if(Arrays.asList(0, 2, 500).contains(sortType)){
                 List<Question> listForDate1 = new ArrayList<Question>(locationPinned);
                 List<Question> listForDate2 = new ArrayList<Question>(mModels.size() - locationPinned);
 
