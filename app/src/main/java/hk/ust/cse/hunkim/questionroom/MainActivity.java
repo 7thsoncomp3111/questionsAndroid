@@ -127,23 +127,8 @@ public class MainActivity extends ListActivity {
                 listView.setAdapter(null);
 
                 //Will choose Title at first
-                if(position==0)
-                {
-                    sortByTitle(listView);
-                }
-                else if (position==1)
-                {
-                    //TODO change to sortByActivity()
-                    sortByUpvote(listView);
-                }
-                else if (position==2)
-                {
-                    sortByTime(listView);
-                }
-                else
-                {
-                    sortByRating(listView);
-                }
+                sortQuestions(position, listView);
+
                 listView.setAdapter(mChatListAdapter);
 
                 mChatListAdapter.registerDataSetObserver(new DataSetObserver() {
@@ -161,6 +146,7 @@ public class MainActivity extends ListActivity {
                 // TODO SORTING IMPLEMENTATION
             }
         });
+
         // End of the line for Sorting
         ////////////////////////////////
 
@@ -423,28 +409,32 @@ public class MainActivity extends ListActivity {
     }
 
 
-    public void sortByUpvote(ListView listView){
-        mChatListAdapter = new QuestionListAdapter(
-                mFirebaseRef.orderByChild("upvote").limitToFirst(200),
-                this, R.layout.question, roomName);
-    }
-
-    public void sortByTitle(ListView listView){
-        mChatListAdapter = new QuestionListAdapter(
-                mFirebaseRef.orderByChild("head").limitToFirst(200),
-                this, R.layout.question, roomName);
-    }
-
-    public void sortByRating(ListView listView){
-        mChatListAdapter = new QuestionListAdapter(
-                mFirebaseRef.orderByChild("upvotePercent").limitToFirst(200),
-                this, R.layout.question, roomName);
-    }
-
-    public void sortByTime(ListView listView) {
-        mChatListAdapter = new QuestionListAdapter(
-                mFirebaseRef.orderByChild("timestamp").limitToFirst(200),
-                this, R.layout.question, roomName);
+    public void sortQuestions(int position, ListView listView){
+        if(position==0)
+        {
+            mChatListAdapter = new QuestionListAdapter(
+                    mFirebaseRef.orderByChild("head").limitToFirst(200),
+                    this, R.layout.question, roomName);
+        }
+        else if (position==1)
+        {
+            //TODO change to sortByActivity()
+            mChatListAdapter = new QuestionListAdapter(
+                    mFirebaseRef.orderByChild("upvote").limitToFirst(200),
+                    this, R.layout.question, roomName);
+        }
+        else if (position==2)
+        {
+            mChatListAdapter = new QuestionListAdapter(
+                    mFirebaseRef.orderByChild("timestamp").limitToFirst(200),
+                    this, R.layout.question, roomName);
+        }
+        else
+        {
+            mChatListAdapter = new QuestionListAdapter(
+                    mFirebaseRef.orderByChild("upvotePercent").limitToFirst(200),
+                    this, R.layout.question, roomName);
+        }
     }
 
     public void updateViews(String key) {

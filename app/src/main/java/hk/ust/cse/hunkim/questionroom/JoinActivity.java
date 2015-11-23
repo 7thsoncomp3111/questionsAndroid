@@ -26,12 +26,14 @@ import hk.ust.cse.hunkim.questionroom.question.ButtonViewAdapter;
  * A login screen that offers login via email/password.
  */
 public class JoinActivity extends Activity {
-    public static final String ROOM_NAME = "Room_name";
+    public static String ROOM_NAME = "Room_name";
     /**
      * Keep track of the login task to ensure we can cancel it if requested.
      */
     // UI references.
     private TextView roomNameView;
+
+    private boolean forTest = false;
 
 
     // Edit Rey Add main page suggestion rooms
@@ -68,10 +70,10 @@ public class JoinActivity extends Activity {
         //Added to retrive firebase data
 
 
-        rooms.clear();
+        //rooms.clear();
         List2view = (GridView) findViewById(R.id.List2View);
-        btn2 = new ButtonViewAdapter(this, rooms, roomNameView);
-        List2view.setAdapter(btn2);
+        //btn2 = new ButtonViewAdapter(this, rooms, roomNameView);
+        //List2view.setAdapter(btn2);
 
     }
 
@@ -79,6 +81,8 @@ public class JoinActivity extends Activity {
         super.onStart();
 
         rooms.clear();
+        btn2 = new ButtonViewAdapter(this, rooms, roomNameView);
+        List2view.setAdapter(btn2);
         btn2.notifyDataSetChanged();
 
         Firebase.setAndroidContext(this);
@@ -106,6 +110,13 @@ public class JoinActivity extends Activity {
 
     }
 
+    public void setForTest(){
+        if(forTest) {
+            forTest = false;
+        } else {
+            forTest = true;
+        }
+    }
     /**
      * Attempts to sign in or register the account specified by the login form.
      * If there are form errors (invalid email, missing fields, etc.), the
@@ -136,7 +147,11 @@ public class JoinActivity extends Activity {
         } else {
             // Start main activity
             Intent intent = new Intent(this, MainActivity.class);
-            intent.putExtra(ROOM_NAME, room_name);
+            if(forTest){
+
+            } else {
+                intent.putExtra(ROOM_NAME, room_name);
+            }
             startActivity(intent);
         }
     }

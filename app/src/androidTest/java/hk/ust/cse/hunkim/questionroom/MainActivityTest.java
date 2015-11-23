@@ -46,21 +46,35 @@ public class MainActivityTest extends ActivityUnitTestCase<MainActivity> {
 
     @MediumTest
     public void testQuestionCompareto(){
-        Question other = new Question("Hello?Hello2",null);
-        Question other2 = new Question("Hello?Hello3",null);
-        Question other4 = new Question("Hello?Hello3",null);
+
+        Question other = new Question("Hello?Hello1",null);
+        Question other2 = new Question("Hello?Hello2",null);
+        Question other4 = new Question("Hello?Hello4","http://www.dummytest.com/");
+        other.compareTo(other);
         other.compareTo(other2);
         other4.plusUpvote();
         other.compareTo(other4);
         try{
             Thread.sleep(30000);
+
         } catch (Exception e){
             e.printStackTrace();
         }
-        Question other3 = new Question("HEllo??Hello4",null);
+
+        Question other3 = new Question("HEllo??Hello3",null);
         other.compareTo(other3);
         Object ee = "testJUnits";
         other.equals(ee);
+        try{
+            Thread.sleep(1000);
+
+        } catch (Exception e){
+            e.printStackTrace();
+        }
+        Question other5 = new Question("HEllo?Hello5",null);
+        other5.compareTo(other3);
+        other3.compareTo(other5);
+        other5.getFirstSentence("hellohello");
     }
 
     public void testPreconditions() {

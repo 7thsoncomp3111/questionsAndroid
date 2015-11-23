@@ -74,7 +74,28 @@ public class JoinActivityTest extends ActivityInstrumentationTestCase2<JoinActiv
         getInstrumentation().waitForIdleSync();
 
         rooms = activity.getRooms();
-        assertNotNull("Room detected by the class should not be null",rooms);
+        assertNotNull("Room detected by the class should not be null", rooms);
+
+        Instrumentation.ActivityMonitor receiverActivityMonitor = getInstrumentation().addMonitor(MainActivity.class.getName(), null, false);
+
+        //Request focus on the EditText field. This must be done on the UiThread because?
+        getInstrumentation().runOnMainSync(new Runnable() {
+            @Override
+            public void run() {
+                roomNameEditText.requestFocus();
+            }
+        });
+        //Wait until all events from the MainHandler's queue are processed
+        getInstrumentation().waitForIdleSync();
+
+        //Send the room name
+        getInstrumentation().sendStringSync("");
+        //roomNameEditText.setText("ANDROID Test Junit");
+        getInstrumentation().waitForIdleSync();
+        activity.ROOM_NAME = "";
+        activity.setForTest();
+        //Click on the sendToReceiverButton to send the message to ReceiverActivity
+        TouchUtils.clickView(this, joinButton);
 
     }
 
@@ -129,9 +150,28 @@ public class JoinActivityTest extends ActivityInstrumentationTestCase2<JoinActiv
         });
         //Wait until all events from the MainHandler's queue are processed
         getInstrumentation().waitForIdleSync();
+        //activity.setForTest();
+        //Send the room name
+        getInstrumentation().sendStringSync("");
+        //roomNameEditText.setText("ANDROID Test Junit");
+        getInstrumentation().waitForIdleSync();
+
+        //Click on the sendToReceiverButton to send the message to ReceiverActivity
+        TouchUtils.clickView(this, joinButton);
 
         //Send the room name
-        getInstrumentation().sendStringSync("ANDROID");
+        getInstrumentation().sendStringSync("@(%*($*%#%");
+        //roomNameEditText.setText("ANDROID Test Junit");
+        getInstrumentation().waitForIdleSync();
+
+        //Click on the sendToReceiverButton to send the message to ReceiverActivity
+        TouchUtils.clickView(this, joinButton);
+
+        //Send the room name
+        getInstrumentation().sendStringSync("ANDROID Test Junit");
+
+
+        //roomNameEditText.setText("ANDROID Test Junit");
         getInstrumentation().waitForIdleSync();
 
         //Click on the sendToReceiverButton to send the message to ReceiverActivity
@@ -160,11 +200,12 @@ public class JoinActivityTest extends ActivityInstrumentationTestCase2<JoinActiv
         */
 
         Intent intent = mainActivity.getIntent();
+
         assertNotNull("Intent should be set", intent);
 
-        assertEquals("ANDROID", intent.getStringExtra(JoinActivity.ROOM_NAME));
+        assertEquals("ANDROID Test Junit", intent.getStringExtra(JoinActivity.ROOM_NAME));
 
-        assertEquals("This is set correctly", "Room name: ANDROID", mainActivity.getTitle());
+        assertEquals("This is set correctly", "Room name: ANDROID Test Junit", mainActivity.getTitle());
 
 
         //Unregister monitor for ReceiverActivity
