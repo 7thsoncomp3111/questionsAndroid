@@ -41,13 +41,6 @@
             android:foregroundGravity="center" />
 
         <Spinner
-            android:id="@+id/static_spinner"
-            android:textAppearance="?android:attr/textAppearanceLarge"
-            android:textColor="#fff"
-            android:layout_width="75dp"
-            android:layout_height="fill_parent" />
-
-        <Spinner
             android:id="@+id/dynamic_spinner"
             android:textAppearance="?android:attr/textAppearanceLarge"
             android:textColor="#fff"

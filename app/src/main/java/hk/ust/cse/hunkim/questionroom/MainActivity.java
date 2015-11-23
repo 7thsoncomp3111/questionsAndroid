@@ -94,20 +94,6 @@ public class MainActivity extends ListActivity {
 
         //////////////////////////////////////
         // Added for Sorting (Below this line)
-        Spinner staticSpinner = (Spinner) findViewById(R.id.static_spinner);
-
-        // Create an ArrayAdapter using the string array and a default spinner
-        ArrayAdapter<CharSequence> staticAdapter = ArrayAdapter
-                .createFromResource(this, R.array.sorting_array,
-                        android.R.layout.simple_spinner_item);
-
-        // Specify the layout to use when the list of choices appears
-        staticAdapter
-                .setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-
-        // Apply the adapter to the spinner
-        staticSpinner.setAdapter(staticAdapter);
-
         Spinner dynamicSpinner = (Spinner) findViewById(R.id.dynamic_spinner);
 
         String[] items = new String[] { "Title", "Activity", "Date", "Rating" };
@@ -317,11 +303,13 @@ public class MainActivity extends ListActivity {
     }
 
     public void updateEcho(String key) {
+        //Infeasible. If true, button is already disabled in QuestionListAdapter.java
+        /*
         if (dbutil.contains(key)) {
             Log.e("Dupkey", "Key is already in the DB!");
             return;
         }
-
+        */
         final Firebase upvoteRef = mFirebaseRef.child(key).child("upvote");
         upvoteRef.addListenerForSingleValueEvent(
                 new ValueEventListener() {
@@ -363,11 +351,13 @@ public class MainActivity extends ListActivity {
     }
 
     public void updateDownvote(String key) {
+        //Infeasible. If true, button is already disabled in QuestionListAdapter.java
+        /*
         if (dbutil.contains(key)) {
             Log.e("Dupkey", "Key is already in the DB!");
             return;
         }
-
+        */
         final Firebase downvoteRef = mFirebaseRef.child(key).child("downvote");
         downvoteRef.addListenerForSingleValueEvent(
                 new ValueEventListener() {
