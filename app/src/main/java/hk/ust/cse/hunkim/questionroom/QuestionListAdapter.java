@@ -1,14 +1,12 @@
 package hk.ust.cse.hunkim.questionroom;
 
 import android.app.Activity;
-import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.PorterDuff;
 import android.text.Html;
 import android.text.util.Linkify;
 import android.util.Log;
 import android.view.View;
-import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -58,7 +56,7 @@ public class QuestionListAdapter extends FirebaseListAdapter<Question> {
      * @param question An instance representing the current state of a chat message
      */
     @Override
-    protected void populateView(View view, Question question) {
+    protected void populateView(View view, final Question question) {
         DBUtil dbUtil = activity.getDbutil();
 
         // Map a Chat object to an entry in our listview
@@ -96,6 +94,20 @@ public class QuestionListAdapter extends FirebaseListAdapter<Question> {
                     }
                 }
 
+        );
+
+        Button CommentButton = (Button) view.findViewById(R.id.comment);
+        CommentButton.setTag(question.getKey());
+        CommentButton.setOnClickListener(
+                new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        MainActivity m = (MainActivity) view.getContext();
+                        String temp = question.getWholeMsg();
+                        m.updateViews((String) view.getTag());
+                        m.CommentActivity((String) view.getTag(), temp);
+                    }
+                }
         );
 
         String msgString = "";
@@ -143,7 +155,7 @@ public class QuestionListAdapter extends FirebaseListAdapter<Question> {
         );*/
 
         // check if we already clicked
-        boolean clickable = !dbUtil.contains(question.getKey());
+        boolean clickable = (!dbUtil.contains(question.getKey()));
 
         echoButton.setClickable(clickable);
         echoButton.setEnabled(clickable);

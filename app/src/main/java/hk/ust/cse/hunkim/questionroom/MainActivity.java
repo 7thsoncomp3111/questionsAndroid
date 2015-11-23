@@ -41,7 +41,6 @@ public class MainActivity extends ListActivity {
 
     // TODO: change this to your own Firebase URL
     private static final String FIREBASE_URL = "https://resplendent-inferno-9346.firebaseio.com/";
-
     private String roomName;
     private Firebase mFirebaseRef;
     private ValueEventListener mConnectedListener;
@@ -406,6 +405,7 @@ public class MainActivity extends ListActivity {
         dbutil.put(key);
     }
 
+
     public void sortByUpvote(ListView listView){
         mChatListAdapter = new QuestionListAdapter(
                 mFirebaseRef.orderByChild("upvote").limitToFirst(200),
@@ -424,10 +424,41 @@ public class MainActivity extends ListActivity {
                 this, R.layout.question, roomName);
     }
 
-    public void sortByTime(ListView listView){
+    public void sortByTime(ListView listView) {
         mChatListAdapter = new QuestionListAdapter(
                 mFirebaseRef.orderByChild("timestamp").limitToFirst(200),
                 this, R.layout.question, roomName);
+    }
+
+    public void updateViews(String key) {
+        final Firebase viewsRef = mFirebaseRef.child(key).child("views");
+        viewsRef.addListenerForSingleValueEvent(
+                new ValueEventListener() {
+                    @Override
+                    public void onDataChange(DataSnapshot dataSnapshot) {
+                        Long viewsValue = (Long) dataSnapshot.getValue();
+                        Log.e("views update:", "" + viewsValue);
+
+                        viewsRef.setValue(viewsValue + 1);
+                    }
+
+                    @Override
+                    public void onCancelled(FirebaseError firebaseError) {
+
+                    }
+                }
+        );
+
+    }
+
+
+
+    public void CommentActivity(String key, String question) {
+        Intent intent = new Intent(this, CommentActivity.class);
+        intent.putExtra(JoinActivity.ROOM_NAME, roomName);
+        intent.putExtra("Key", key);
+        intent.putExtra("Question", question);
+        startActivity(intent);
     }
 
     public void Close(View view) {

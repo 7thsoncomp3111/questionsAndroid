@@ -9,6 +9,10 @@
 
     <string name="error_invalid_room_name">Use only alphanumeric characters</string>
     <string name="error_field_required">This field is required</string>
+    <string name="title_activity_comment">CommentActivity</string>
+
+    <string name="hello_world">Hello world!</string>
+    <string name="action_settings">Settings</string>
 
     <string-array name="sorting_array">
         <item>Title</item>

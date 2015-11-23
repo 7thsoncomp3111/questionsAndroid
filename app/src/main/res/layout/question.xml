@@ -24,6 +24,7 @@
         android:layout_marginLeft="5dp"
         android:layout_marginRight="5dp" />
 
+
     <LinearLayout
         android:orientation="horizontal"
         android:layout_width="wrap_content"
@@ -34,8 +35,9 @@
         android:layout_marginRight="5dp"
         android:layout_gravity="left">
 
+
         <Button
-            android:id="@+id/replyecho"
+            android:id="@+id/comment"
             style="?android:attr/borderlessButtonStyle"
             android:drawableLeft="@drawable/replyhollowcolor"
             android:layout_width="wrap_content"
@@ -71,6 +73,10 @@
             android:gravity="center"
             android:layout_gravity="center" />
 
+
     </LinearLayout>
+
+
+
 
 </LinearLayout>
