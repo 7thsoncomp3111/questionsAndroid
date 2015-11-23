@@ -12,6 +12,7 @@
     <style parent="@android:style/Widget.Spinner" name="SpinnerAsEditText">
 
         <item name="android:background">@android:drawable/edit_text</item>
+        <item name="android:gravity">center_vertical</item>
 
     </style>
 
