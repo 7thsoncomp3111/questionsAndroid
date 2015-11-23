@@ -110,7 +110,22 @@ public class ThreadListAdapter extends BaseAdapter {
 
             @Override
             public void onChildChanged(DataSnapshot dataSnapshot, String s) {
+                String modelName = dataSnapshot.getKey();
+                Thread oldModel = dataSnapshot.getValue(ThreadListAdapter.this.mModelClass);
 
+
+                // TOFIX: Any easy way to ser key?
+                setKey(modelName, oldModel);
+
+
+                int index = mModels.indexOf(oldModel);
+                mModels.set(index, oldModel);
+
+
+                // update map
+                mModelKeys.put(modelName, oldModel);
+
+                notifyDataSetChanged();
             }
 
             @Override

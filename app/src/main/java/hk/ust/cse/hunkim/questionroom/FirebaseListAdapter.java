@@ -90,7 +90,23 @@ public abstract class FirebaseListAdapter<T> extends BaseAdapter {
 
             @Override
             public void onChildChanged(DataSnapshot dataSnapshot, String s) {
+                // One of the mModels changed. Replace it in our list and name mapping
+                String modelName = dataSnapshot.getKey();
+                T oldModel = mModelKeys.get(modelName);
+                T newModel = dataSnapshot.getValue(FirebaseListAdapter.this.mModelClass);
 
+                // TOFIX: Any easy way to ser key?
+                setKey(modelName, newModel);
+
+
+                int index = mModels.indexOf(oldModel);
+                mModels.set(index, newModel);
+
+
+                // update map
+                mModelKeys.put(modelName, newModel);
+
+                notifyDataSetChanged();
             }
 
             @Override
