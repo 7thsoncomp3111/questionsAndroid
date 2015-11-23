@@ -1,16 +1,21 @@
 package hk.ust.cse.hunkim.questionroom;
 
 import android.app.Activity;
+import android.app.AlertDialog;
 import android.app.ListActivity;
+import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.database.Cursor;
 import android.database.DataSetObserver;
 import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Bundle;
+import android.preference.DialogPreference;
 import android.provider.MediaStore;
 import android.util.Log;
 import android.view.KeyEvent;
+import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.inputmethod.EditorInfo;
@@ -46,6 +51,7 @@ public class MainActivity extends ListActivity {
     private static final String FIREBASE_URL = "https://resplendent-inferno-9346.firebaseio.com/";
     private String roomName;
     private Firebase mFirebaseRef;
+    private Firebase subscriptionRef;
     private ValueEventListener mConnectedListener;
     private QuestionListAdapter mChatListAdapter;
     private static final int GET_FROM_GALLERY = 1;
@@ -82,6 +88,7 @@ public class MainActivity extends ListActivity {
 
         // Setup our Firebase mFirebaseRef
         mFirebaseRef = new Firebase(FIREBASE_URL).child("room").child(roomName).child("questions");
+        subscriptionRef = new Firebase(FIREBASE_URL).child("subscription");
 
         // Edit by Erez, give a header title for each room
 
@@ -471,7 +478,16 @@ public class MainActivity extends ListActivity {
 
     }
 
+    public void subscribe(String key) {
+        //subscriptionRef.push().setValue();
+        String emailAdress = requestEmail();
 
+    }
+
+    public void unsubscribe(String key) {
+        String emailAdress = requestEmail();
+
+    }
 
     public void CommentActivity(String key, String question) {
         Intent intent = new Intent(this, CommentActivity.class);
@@ -479,6 +495,42 @@ public class MainActivity extends ListActivity {
         intent.putExtra("Key", key);
         intent.putExtra("Question", question);
         startActivity(intent);
+    }
+
+    public String requestEmail() {
+        final Context context = this;
+
+        // get prompts.xml view
+        LayoutInflater li = LayoutInflater.from(context);
+        View promptsView = li.inflate(R.layout.prompts, null);
+
+        AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(
+                context);
+
+        // set prompts.xml to alertdialog builder
+        alertDialogBuilder.setView(promptsView);
+
+        final EditText userInput = (EditText) promptsView.findViewById(R.id.editTextDialogUserInput);
+
+        // set dialog message
+        alertDialogBuilder.setCancelable(false);
+        alertDialogBuilder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog,int id) {
+
+            }
+        });
+        alertDialogBuilder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int id) {
+                dialog.cancel();
+            }
+        });
+
+        // create alert dialog
+        AlertDialog alertDialog = alertDialogBuilder.create();
+
+        // show it
+        alertDialog.show();
+        return(userInput.toString());
     }
 
     public void Close(View view) {

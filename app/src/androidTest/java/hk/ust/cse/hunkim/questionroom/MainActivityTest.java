@@ -1,12 +1,17 @@
 package hk.ust.cse.hunkim.questionroom;
 
 import android.app.Activity;
+import android.app.AlertDialog;
 import android.app.Instrumentation;
+import android.content.Context;
 import android.content.Intent;
+import android.preference.DialogPreference;
 import android.test.ActivityUnitTestCase;
 import android.test.TouchUtils;
 import android.test.suitebuilder.annotation.MediumTest;
 import android.text.Html;
+import android.view.LayoutInflater;
+import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
@@ -353,6 +358,5 @@ public class MainActivityTest extends ActivityUnitTestCase<MainActivity> {
         MainActivity myActivity = (MainActivity) receiverActivityMonitor.waitForActivityWithTimeout(1000);
         myActivity.CommentActivity("test","test");
     }
-
 
 }

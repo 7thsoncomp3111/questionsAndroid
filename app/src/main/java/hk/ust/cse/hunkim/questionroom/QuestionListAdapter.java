@@ -107,7 +107,7 @@ public class QuestionListAdapter extends FirebaseListAdapter<Question> {
         moreButton.setOnClickListener(
                 (new View.OnClickListener() {
                     @Override
-                    public void onClick(View v) {
+                    public void onClick(final View v) {
                         //Creating the instance of PopupMenu
                         PopupMenu popup = new PopupMenu(activity, moreButton);
                         //Inflating the Popup using xml file
@@ -117,6 +117,15 @@ public class QuestionListAdapter extends FirebaseListAdapter<Question> {
                         //registering popup with OnMenuItemClickListener
                         popup.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
                             public boolean onMenuItemClick(MenuItem item) {
+                                MainActivity m = (MainActivity) v.getContext();
+                                if(item.getItemId() == R.id.one)
+                                {
+                                    m.subscribe((String) v.getTag());
+                                }
+                                else
+                                {
+                                    m.unsubscribe((String) v.getTag());
+                                }
                                 return true;
                             }
                         });
