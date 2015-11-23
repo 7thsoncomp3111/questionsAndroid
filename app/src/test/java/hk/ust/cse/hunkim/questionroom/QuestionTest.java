@@ -11,7 +11,7 @@ import hk.ust.cse.hunkim.questionroom.question.Question;
  * Created by hunkim on 7/15/15.
  */
 
-public class QuestionTest  extends TestCase {
+/*public class QuestionTest  extends TestCase {
     Question q;
 
 
@@ -48,4 +48,4 @@ public class QuestionTest  extends TestCase {
         Question other2 = new Question("Hello?Hello3",null);
         other.compareTo(other2);
     }
-}
+}*/

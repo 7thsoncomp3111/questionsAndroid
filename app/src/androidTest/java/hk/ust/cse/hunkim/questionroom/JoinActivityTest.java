@@ -1,5 +1,6 @@
 package hk.ust.cse.hunkim.questionroom;
 
+import android.app.Activity;
 import android.app.Instrumentation;
 import android.content.Context;
 import android.content.Intent;
@@ -94,8 +95,13 @@ public class JoinActivityTest extends ActivityInstrumentationTestCase2<JoinActiv
         getInstrumentation().waitForIdleSync();
         activity.ROOM_NAME = "";
         activity.setForTest();
+
         //Click on the sendToReceiverButton to send the message to ReceiverActivity
         TouchUtils.clickView(this, joinButton);
+        activity.ROOM_NAME = "All";
+        activity.setForTest();
+        TouchUtils.clickView(this, joinButton);
+
 
     }
 
@@ -210,6 +216,55 @@ public class JoinActivityTest extends ActivityInstrumentationTestCase2<JoinActiv
 
         //Unregister monitor for ReceiverActivity
         getInstrumentation().removeMonitor(receiverActivityMonitor);
+
+    }
+    public void testOnCreateMainActivity(){
+
+
+        //Request focus on the EditText field. This must be done on the UiThread because?
+        Instrumentation.ActivityMonitor receiverActivityMonitor = getInstrumentation().addMonitor(MainActivity.class.getName(), null, false);
+        getInstrumentation().runOnMainSync(new Runnable() {
+            @Override
+            public void run() {
+                roomNameEditText.requestFocus();
+            }
+        });
+        //Wait until all events from the MainHandler's queue are processed
+        getInstrumentation().waitForIdleSync();
+        //activity.setForTest();
+        //Send the room name
+        getInstrumentation().sendStringSync("");
+        //roomNameEditText.setText("ANDROID Test Junit");
+        getInstrumentation().waitForIdleSync();
+        MainActivity mainActivity = (MainActivity) receiverActivityMonitor.waitForActivityWithTimeout(TIMEOUT_IN_MS);
+        activity.ROOM_NAME = "";
+        Intent intent = new Intent(activity, MainActivity.class);
+        activity.startActivity(intent);
+
+    }
+
+    public void testOnCreateMainActivity2(){
+
+
+        //Request focus on the EditText field. This must be done on the UiThread because?
+        Instrumentation.ActivityMonitor receiverActivityMonitor = getInstrumentation().addMonitor(MainActivity.class.getName(), null, false);
+        getInstrumentation().runOnMainSync(new Runnable() {
+            @Override
+            public void run() {
+                roomNameEditText.requestFocus();
+            }
+        });
+        //Wait until all events from the MainHandler's queue are processed
+        getInstrumentation().waitForIdleSync();
+        //activity.setForTest();
+        //Send the room name
+        getInstrumentation().sendStringSync("");
+        //roomNameEditText.setText("ANDROID Test Junit");
+        getInstrumentation().waitForIdleSync();
+        MainActivity mainActivity = (MainActivity) receiverActivityMonitor.waitForActivityWithTimeout(TIMEOUT_IN_MS);
+        activity.ROOM_NAME = null;
+        Intent intent = new Intent(activity, MainActivity.class);
+        activity.startActivity(intent);
 
     }
 }

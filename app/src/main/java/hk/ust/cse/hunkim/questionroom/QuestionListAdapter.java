@@ -45,7 +45,7 @@ public class QuestionListAdapter extends FirebaseListAdapter<Question> {
         super(ref, Question.class, layout, activity);
         roomName = room_Name;
         // Must be MainActivity
-        assert (activity instanceof MainActivity);
+        //assert (activity instanceof MainActivity);
 
        this.activity = (MainActivity) activity;
     }

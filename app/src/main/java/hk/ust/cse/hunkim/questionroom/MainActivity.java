@@ -189,9 +189,10 @@ public class MainActivity extends ListActivity {
 
         //Detects request codes
         if(requestCode==GET_FROM_GALLERY && resultCode == Activity.RESULT_OK) {
-            Uri selectedImage = data.getData();
-            Bitmap bitmap = null;
+
             try {
+                Uri selectedImage = data.getData();
+                Bitmap bitmap = null;
                 bitmap = MediaStore.Images.Media.getBitmap(this.getContentResolver(), selectedImage);
                 String filePath = getPath(selectedImage);
                 new uploadPicture(this).execute(filePath);
@@ -201,6 +202,8 @@ public class MainActivity extends ListActivity {
                 e.printStackTrace();
             } catch (IOException e) {
                 // TODO Auto-generated catch block
+                e.printStackTrace();
+            } catch (Exception e){
                 e.printStackTrace();
             }
 
@@ -278,6 +281,9 @@ public class MainActivity extends ListActivity {
         mChatListAdapter.cleanup();
     }
 
+    public EditText forTestGetMessageInput(){
+        return (EditText) findViewById(R.id.messageInput);
+    }
     private void sendMessage() {
         EditText inputText = (EditText) findViewById(R.id.messageInput);
         String input = inputText.getText().toString();
@@ -287,10 +293,6 @@ public class MainActivity extends ListActivity {
                 // Concat the actual string with the image upload link
                 question = new Question(input,uploadedPirctureLink);
             } else {
-                if(input.contains("<img")){
-                    Toast.makeText(MainActivity.this, "Please don't input img tag on the message", Toast.LENGTH_SHORT).show();
-                    return;
-                }
                 question = new Question(input,null);
             }
             // Create our 'model', a Chat object
@@ -317,8 +319,11 @@ public class MainActivity extends ListActivity {
                     public void onDataChange(DataSnapshot dataSnapshot) {
                         Long upvoteValue = (Long) dataSnapshot.getValue();
                         Log.e("Upvote update:", "" + upvoteValue);
-
-                        upvoteRef.setValue(upvoteValue + 1);
+                        try {
+                            upvoteRef.setValue(upvoteValue + 1);
+                        } catch (Exception e){
+                            e.printStackTrace();
+                        }
                     }
 
                     @Override
@@ -336,7 +341,12 @@ public class MainActivity extends ListActivity {
                         Long orderValue = (Long) dataSnapshot.getValue();
                         Log.e("Order update:", "" + orderValue);
 
-                        orderRef.setValue(orderValue - 1);
+                        try {
+                            orderRef.setValue(orderValue - 1);
+                        } catch (Exception e){
+                            e.printStackTrace();
+                        }
+
                     }
 
                     @Override
@@ -366,7 +376,12 @@ public class MainActivity extends ListActivity {
                         Long downvoteValue = (Long) dataSnapshot.getValue();
                         Log.e("Downvote update:", "" + downvoteValue);
 
-                        downvoteRef.setValue(downvoteValue + 1);
+                        try {
+                            downvoteRef.setValue(downvoteValue + 1);
+                        } catch (Exception e){
+                            e.printStackTrace();
+                        }
+
                     }
 
                     @Override
@@ -384,7 +399,12 @@ public class MainActivity extends ListActivity {
                         Long orderValue = (Long) dataSnapshot.getValue();
                         Log.e("Order update:", "" + orderValue);
 
-                        orderRef.setValue(orderValue + 1);
+
+                        try {
+                            orderRef.setValue(orderValue + 1);
+                        } catch (Exception e){
+                            e.printStackTrace();
+                        }
                     }
 
                     @Override
