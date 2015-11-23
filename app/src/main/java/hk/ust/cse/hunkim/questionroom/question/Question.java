@@ -44,6 +44,9 @@ public class Question implements Comparable<Question> {
     private int order;
     private boolean newQuestion;
     private int view;
+    private boolean pinned;
+
+    public boolean getPinned(){return pinned;}
 
 
 

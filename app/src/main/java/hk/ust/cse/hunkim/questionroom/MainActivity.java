@@ -258,7 +258,7 @@ public class MainActivity extends ListActivity {
         // Tell our list adapter that we only want 200 messages at a time
         mChatListAdapter = new QuestionListAdapter(
                 mFirebaseRef.orderByChild("upvote").limitToFirst(200),
-                this, R.layout.question, roomName);
+                this, R.layout.question, roomName,false,500);
         listView.setAdapter(mChatListAdapter);
 
         mChatListAdapter.registerDataSetObserver(new DataSetObserver() {
@@ -438,27 +438,31 @@ public class MainActivity extends ListActivity {
         {
             mChatListAdapter = new QuestionListAdapter(
                     mFirebaseRef.orderByChild("head").limitToFirst(200),
-                    this, R.layout.question, roomName);
+                    this, R.layout.question, roomName,true,position);
         }
         else if (position==1)
         {
             //TODO change to sortByActivity()
             mChatListAdapter = new QuestionListAdapter(
                     mFirebaseRef.orderByChild("upvote").limitToFirst(200),
+<<<<<<< HEAD
                     this, R.layout.question, roomName);
             Collections.sort(mChatListAdapter.mModels);
+=======
+                    this, R.layout.question, roomName,true,position);
+>>>>>>> origin/master
         }
         else if (position==2)
         {
             mChatListAdapter = new QuestionListAdapter(
                     mFirebaseRef.orderByChild("timestamp").limitToFirst(200),
-                    this, R.layout.question, roomName);
+                    this, R.layout.question, roomName,true,position);
         }
         else
         {
             mChatListAdapter = new QuestionListAdapter(
                     mFirebaseRef.orderByChild("upvotePercent").limitToFirst(200),
-                    this, R.layout.question, roomName);
+                    this, R.layout.question, roomName,true,position);
         }
     }
 
