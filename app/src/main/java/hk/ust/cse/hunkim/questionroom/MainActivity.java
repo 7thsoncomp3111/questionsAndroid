@@ -45,6 +45,7 @@ import java.util.List;
 import hk.ust.cse.hunkim.questionroom.db.DBHelper;
 import hk.ust.cse.hunkim.questionroom.db.DBUtil;
 import hk.ust.cse.hunkim.questionroom.question.Question;
+import hk.ust.cse.hunkim.questionroom.question.Subscription;
 import hk.ust.cse.hunkim.questionroom.question.uploadPicture;
 
 public class MainActivity extends ListActivity {
@@ -112,7 +113,7 @@ public class MainActivity extends ListActivity {
 
         ArrayAdapter<String> adapter = new ArrayAdapter<String>(this,
                 R.layout.spinner_item, R.id.spinner_title, items);
-				
+
         dynamicSpinner.setAdapter(adapter);
 
         dynamicSpinner.setOnItemSelectedListener(new OnItemSelectedListener() {
@@ -195,7 +196,7 @@ public class MainActivity extends ListActivity {
     }
 
     public String getRoomName(){return roomName;}
-    
+
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
@@ -483,18 +484,6 @@ public class MainActivity extends ListActivity {
 
     }
 
-    public void subscribe(String key) {
-        //subscriptionRef.push().setValue();
-        String emailAdress = requestEmail();
-
-    }
-
-
-    public void unsubscribe(String key) {
-        String emailAdress = requestEmail();
-
-    }
-
     public void CommentActivity(String key, String question) {
         Intent intent = new Intent(this, CommentActivity.class);
         intent.putExtra(JoinActivity.ROOM_NAME, roomName);
@@ -503,9 +492,10 @@ public class MainActivity extends ListActivity {
         startActivity(intent);
     }
 
-    public String requestEmail() {
+    public void requestEmail(String choice, String key) {
         final Context context = this;
-
+        final String mChoice = choice;
+        final String mKey = key;
         // get prompts.xml view
         LayoutInflater li = LayoutInflater.from(context);
         View promptsView = li.inflate(R.layout.prompts, null);
@@ -521,8 +511,35 @@ public class MainActivity extends ListActivity {
         // set dialog message
         alertDialogBuilder.setCancelable(false);
         alertDialogBuilder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
-            public void onClick(DialogInterface dialog,int id) {
+            public void onClick(DialogInterface dialog, final int id) {
+                final String emailAdress = userInput.getText().toString();
+                if (!emailAdress.equals("")) {
+                    if(mChoice.equals("subscribe")) {
+                        Subscription subscription = new Subscription(emailAdress, mKey);
 
+                        // Create a new, auto-generated child of that chat location, and save our chat data there
+                        subscriptionRef.push().setValue(subscription);
+                    }
+                    else{
+                        subscriptionRef.addListenerForSingleValueEvent(new ValueEventListener() {
+                            @Override
+                            public void onDataChange(DataSnapshot snapshot) {
+                                for(DataSnapshot child : snapshot.getChildren()){
+                                    String childEmail = (String)child.child("email").getValue();
+                                    String childId = (String) child.child("id").getValue();
+                                    if(childEmail==emailAdress && childId==mKey);
+                                    {
+                                        //subscriptionRef.child(child.getKey()).removeValue();
+                                    }
+                                }
+                            }
+
+                            @Override
+                            public void onCancelled(FirebaseError firebaseError) {
+                            }
+                        });
+                    }
+                }
             }
         });
         alertDialogBuilder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
@@ -536,7 +553,6 @@ public class MainActivity extends ListActivity {
 
         // show it
         alertDialog.show();
-        return(userInput.toString());
     }
 
     public void Close(View view) {

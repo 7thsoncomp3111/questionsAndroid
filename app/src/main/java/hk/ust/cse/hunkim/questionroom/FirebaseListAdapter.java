@@ -157,11 +157,11 @@ public abstract class FirebaseListAdapter<T> extends BaseAdapter {
 
         // FIXME: Perhaps this is the first time to show data
         // Let's order the list
-        //if (i == 0) {
+
+        if (i == 0) {
+
             sortModels(mModels);
-        //}
-
-
+        }
         // Let's get keys and models
         T model = mModels.get(i);
 
