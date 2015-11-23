@@ -1,7 +1,6 @@
 package hk.ust.cse.hunkim.questionroom;
 
 import android.app.Activity;
-import android.app.ListActivity;
 import android.content.Intent;
 import android.database.Cursor;
 import android.database.DataSetObserver;
@@ -25,22 +24,20 @@ import com.firebase.client.ValueEventListener;
 
 import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.util.jar.Manifest;
 
 import hk.ust.cse.hunkim.questionroom.db.DBHelper;
 import hk.ust.cse.hunkim.questionroom.db.DBUtil;
-import hk.ust.cse.hunkim.questionroom.question.Question;
+import hk.ust.cse.hunkim.questionroom.question.Thread;
 import hk.ust.cse.hunkim.questionroom.question.uploadPicture;
 
 public class CommentActivity extends MainActivity {
 
-    // TODO: change this to your own Firebase URL
     private static final String FIREBASE_URL = "https://resplendent-inferno-9346.firebaseio.com/";
     private String roomName;
     private String key;
     private String question;
     private Firebase mFirebaseRef;
-    private ThreadListAdapter commentListAdapter;
+    private ThreadListAdapter mChatListAdapter;
     private static final int GET_FROM_GALLERY = 1;
     private DBUtil dbutil;
     private String uploadedPirctureLink = "";
@@ -100,12 +97,6 @@ public class CommentActivity extends MainActivity {
             }
         });
 
-        findViewById(R.id.uploadImage).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                startActivityForResult(new Intent(Intent.ACTION_PICK, android.provider.MediaStore.Images.Media.INTERNAL_CONTENT_URI), GET_FROM_GALLERY);
-            }
-        });
 
         // get the DB Helper
         DBHelper mDbHelper = new DBHelper(this);
@@ -176,20 +167,20 @@ public class CommentActivity extends MainActivity {
         // Setup our view and list adapter. Ensure it scrolls to the bottom as data changes
         final ListView listView = (ListView)findViewById(android.R.id.list);
         // Tell our list adapter that we only want 200 messages at a time
-        commentListAdapter = new ThreadListAdapter(
+        mChatListAdapter = new ThreadListAdapter(
                 mFirebaseRef.orderByChild("prev").limitToFirst(200),
                 this, R.layout.question, roomName, key);
-        commentListAdapter.notifyDataSetChanged();
-        listView.setAdapter(commentListAdapter);
+        mChatListAdapter.notifyDataSetChanged();
+        listView.setAdapter(mChatListAdapter);
 
         TextView q = (TextView) findViewById(R.id.Question);
         q.setText("Question: " +question);
 
-        commentListAdapter.registerDataSetObserver(new DataSetObserver() {
+        mChatListAdapter.registerDataSetObserver(new DataSetObserver() {
             @Override
             public void onChanged() {
                 super.onChanged();
-                listView.setSelection(commentListAdapter.getCount() - 1);
+                listView.setSelection(mChatListAdapter.getCount() - 1);
             }
         });
 
@@ -199,30 +190,18 @@ public class CommentActivity extends MainActivity {
     @Override
     public void onStop() {
         super.onStop();
-        commentListAdapter.cleanup();
+        mChatListAdapter.cleanup();
     }
 
     private void sendMessage() {
         EditText inputText = (EditText) findViewById(R.id.messageInput);
         String input = inputText.getText().toString();
         if (!input.equals("")) {
-            Question question;
-            if(havePicture) {
-                // Concat the actual string with the image upload link
-                question = new Question(input,uploadedPirctureLink);
-            } else {
-                if(input.contains("<img")){
-                    Toast.makeText(CommentActivity.this, "Please don't input img tag on the message", Toast.LENGTH_SHORT).show();
-                    return;
-                }
-                question = new Question(input,null);
-            }
             // Create our 'model', a Chat object
-
+            Thread thread = new Thread(input, key);
             // Create a new, auto-generated child of that chat location, and save our chat data there
-            mFirebaseRef.push().setValue(question);
+            mFirebaseRef.push().setValue(thread);
             inputText.setText("");
-            uploadedPirctureLink = "";
         }
     }
 

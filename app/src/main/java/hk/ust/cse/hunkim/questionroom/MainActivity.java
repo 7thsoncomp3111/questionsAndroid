@@ -286,7 +286,7 @@ public class MainActivity extends ListActivity {
     public void onStop() {
         super.onStop();
         mFirebaseRef.getRoot().child(".info/connected").removeEventListener(mConnectedListener);
-        mChatListAdapter.cleanup();
+        //mChatListAdapter.cleanup();
     }
 
     private void sendMessage() {
