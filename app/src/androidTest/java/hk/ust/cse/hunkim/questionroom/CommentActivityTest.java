@@ -146,5 +146,12 @@ public class CommentActivityTest extends ActivityUnitTestCase<CommentActivity> {
         downvoteButton.performClick();
         echoButton.performClick();
         CommentButton.performClick();
+        hk.ust.cse.hunkim.questionroom.question.Thread test1 = commentActivity.mChatListAdapter.getItem(0);
+        hk.ust.cse.hunkim.questionroom.question.Thread test2 = commentActivity.mChatListAdapter.getItem("-K3oobxNrXA4F6Y0r5uZ");
+        assertEquals(commentActivity.mChatListAdapter.isSecondLvReply(test1), false);
+        assertEquals(commentActivity.mChatListAdapter.isSecondLvReply(commentActivity.mChatListAdapter.getItem("-K3omSyuq7GudrBA8k51")), true);
+        assertEquals(commentActivity.mChatListAdapter.isSecondLvReply(commentActivity.mChatListAdapter.getItem("-K3omTxCTjtIjz-uRNJW")), false);
+
+        commentActivity.mChatListAdapter.cleanup();
     }
 }
