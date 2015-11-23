@@ -445,12 +445,7 @@ public class MainActivity extends ListActivity {
             //TODO change to sortByActivity()
             mChatListAdapter = new QuestionListAdapter(
                     mFirebaseRef.orderByChild("upvote").limitToFirst(200),
-<<<<<<< HEAD
-                    this, R.layout.question, roomName);
-            Collections.sort(mChatListAdapter.mModels);
-=======
                     this, R.layout.question, roomName,true,position);
->>>>>>> origin/master
         }
         else if (position==2)
         {

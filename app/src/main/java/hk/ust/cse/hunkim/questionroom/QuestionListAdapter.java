@@ -225,10 +225,8 @@ public class QuestionListAdapter extends FirebaseListAdapter<Question> {
 
     @Override
     protected void sortModels(List<Question> mModels) {
-<<<<<<< HEAD
         Collections.sort(mModels);
-=======
-        //Collections.sort(mModels);
+
         if(sortNow) {
             List<Question> temp;
             if(sortType == 3) {
@@ -311,7 +309,7 @@ public class QuestionListAdapter extends FirebaseListAdapter<Question> {
             }
 
         }
->>>>>>> origin/master
+
     }
 
 
