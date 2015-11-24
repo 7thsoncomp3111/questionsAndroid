@@ -492,9 +492,9 @@ public class MainActivity extends ListActivity {
         startActivity(intent);
     }
 
-    public void requestEmail( String key) {
+    public void requestEmail(String choice, String key) {
         final Context context = this;
-        //final String mChoice = choice;
+        final String mChoice = choice;
         final String mKey = key;
         // get prompts.xml view
         LayoutInflater li = LayoutInflater.from(context);
@@ -514,14 +514,13 @@ public class MainActivity extends ListActivity {
             public void onClick(DialogInterface dialog, final int id) {
                 final String emailAdress = userInput.getText().toString();
                 if (!emailAdress.equals("")) {
-                    //if(mChoice.equals("subscribe")) {
-                    Subscription subscription = new Subscription(emailAdress, mKey);
+                    if(mChoice.equals("subscribe")) {
+                        Subscription subscription = new Subscription(emailAdress, mKey);
 
-                    // Create a new, auto-generated child of that chat location, and save our chat data there
-                    subscriptionRef.push().setValue(subscription);
-                    Toast.makeText(MainActivity.this, "Subscription recorded!", Toast.LENGTH_SHORT).show();
-                    //}
-                    /*
+                        // Create a new, auto-generated child of that chat location, and save our chat data there
+                        subscriptionRef.push().setValue(subscription);
+                        Toast.makeText(MainActivity.this, "Subscription recorded!", Toast.LENGTH_SHORT).show();
+                    }
                     else{
                         subscriptionRef.addListenerForSingleValueEvent(new ValueEventListener() {
                             @Override
@@ -540,7 +539,7 @@ public class MainActivity extends ListActivity {
                             public void onCancelled(FirebaseError firebaseError) {
                             }
                         });
-                    }*/
+                    }
                 }
             }
         });
