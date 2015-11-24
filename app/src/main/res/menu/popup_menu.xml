@@ -4,8 +4,4 @@
         android:id="@+id/one"
         android:title="Subscribe"/>
 
-    <item
-        android:id="@+id/two"
-        android:title="Unsubscribe"/>
-
 </menu>

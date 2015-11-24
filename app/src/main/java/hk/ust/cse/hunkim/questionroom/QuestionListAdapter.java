@@ -122,12 +122,13 @@ public class QuestionListAdapter extends FirebaseListAdapter<Question> {
                         popup.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
                             public boolean onMenuItemClick(MenuItem item) {
                                 MainActivity m = (MainActivity) v.getContext();
-                                if (item.getItemId() == R.id.one) {
-                                    m.requestEmail("subscribe", (String) v.getTag());
-                                }
+                                //if (item.getItemId() == R.id.one) {
+                                m.requestEmail((String) v.getTag());
+                                //}
+                                /*
                                 else {
                                     m.requestEmail("unsubscribe", (String) v.getTag());
-                                }
+                                }*/
                                 return true;
                             }
                         });
