@@ -258,7 +258,7 @@ public class MainActivity extends ListActivity {
         final ListView listView = (ListView)findViewById(android.R.id.list);
         // Tell our list adapter that we only want 200 messages at a time
         mChatListAdapter = new QuestionListAdapter(
-                mFirebaseRef.orderByChild("upvote").limitToFirst(200),
+                mFirebaseRef.orderByChild("title").limitToFirst(200),
                 this, R.layout.question, roomName,false,500);
         listView.setAdapter(mChatListAdapter);
 
